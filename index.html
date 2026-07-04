@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- SDK EmailJS: dipakai untuk mengirim pesan + foto photobooth ke email secara diam-diam di background -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <style>
   :root{
@@ -211,10 +212,37 @@
   }
   .btn-whatsapp:hover{ filter:brightness(1.06); }
 
+  .btn-secondary{
+    background:#fff;
+    color:var(--rose-deep);
+    border:1.5px solid var(--rose-deep);
+    box-shadow:none;
+  }
+  .btn-secondary:hover{ background:var(--blush); }
+
+  /* Baris navigasi: tombol back (kecil) + tombol lanjut (mengisi sisa ruang) */
+  .nav-row{
+    display:flex;
+    gap:10px;
+    align-items:stretch;
+  }
+  .btn-back{
+    flex:0 0 54px;
+    padding:15px 0;
+    font-size:1.1rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .nav-row .btn-primary,
+  .nav-row .btn-whatsapp{
+    flex:1;
+  }
+
   .gift-tag{
     display:flex;
     align-items:center;
-    gap:12px;
+    gap:14px;
     background:var(--blush);
     border:1px dashed var(--rose-gold);
     border-radius:14px;
@@ -222,11 +250,19 @@
     margin:6px 0 22px;
   }
   .gift-tag .num{
+    flex-shrink:0;
+    width:38px;
+    height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#fff;
+    border:1.5px solid var(--rose-deep);
     font-family:'Cormorant Garamond',serif;
     font-weight:600;
-    font-size:1.6rem;
+    font-size:1.3rem;
     color:var(--rose-deep);
-    line-height:1;
   }
   .gift-tag .txt{
     font-size:.82rem;
@@ -300,14 +336,6 @@
   .cam-actions-row{ gap:10px; }
   .cam-actions-row .btn{ flex:1; }
 
-  .btn-secondary{
-    background:#fff;
-    color:var(--rose-deep);
-    border:1.5px solid var(--rose-deep);
-    box-shadow:none;
-  }
-  .btn-secondary:hover{ background:var(--blush); }
-
   .cam-status{
     font-size:.75rem;
     color:var(--ink-soft);
@@ -325,18 +353,21 @@
     margin-top:24px;
   }
 
-  .step-indicator{
-    display:flex;
-    justify-content:center;
-    gap:6px;
-    margin-bottom:18px;
+  /* ====== PROGRESS BAR ====== */
+  .progress-track{
+    width:100%;
+    height:4px;
+    border-radius:2px;
+    background:rgba(201,138,148,.25);
+    overflow:hidden;
+    margin-bottom:20px;
   }
-  .step-indicator span{
-    width:22px;height:3px;border-radius:2px;
-    background:rgba(201,138,148,.3);
-    transition:background .3s;
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, var(--rose-gold), var(--rose-deep));
+    transition:width .45s ease;
   }
-  .step-indicator span.on{ background:var(--rose-deep); }
 
   @media (max-width:360px){
     .card{ padding:26px 18px 24px; }
@@ -348,80 +379,263 @@
 
 <canvas id="petal-canvas"></canvas>
 
+<!-- ============ MUSIK LATAR TERSEMBUNYI ============ -->
+<!-- Playlist berurutan: taruh file lagu1.mp3, lagu2.mp3, dst di folder yang sama dengan index.html -->
 <audio id="bg-music" style="display:none;"></audio>
+
 <div id="stage">
+
+  <!-- ===================== HALAMAN 1 : PEMBUKA ===================== -->
   <section class="page active fade-in" data-page="1">
     <div class="card">
       <p class="eyebrow">Untuk seseorang yang istimewa</p>
-      <h1 class="title">Selamat Ulang Tahun,<br>Sayangku 🤍</h1>
+      <h1 class="title">Selamat Ulang Tahun,<br>Icha Sabillah Anjani</h1>
       <div class="divider"></div>
       <p class="body-text">
-        Di hari spesial ini, aku hanya ingin kamu tahu satu hal:
+        Di hari spesial ini, aku hanya ingin kamu tahu satu hal:<br>
         <span class="accent">Haii orang yang aku sayangi setelah ibuku.</span>
-        Selamat ulang tahun yah. Semoga tetap diberikan kesehatan, semoga diberikan kelancaran di setiap langkahmu. Semoga Allah SWT melindungimu di setiap prosesmu. Beribu ribu kata tak bisa diungkapkan untuk mendeskripsikan sesosok Icha Sabillah Anjani.
-Kado terindah yang diberikan Tuhan adalah kebahagiaan. Semoga kamu tetap bahagia selamanya. Semoga di umur kamu yang menginjak 22 Tahun ini bisa menggaai semua mimpimu. Apa yang kamu impikan selama ini semoga segera terwujud. 
+        Selamat ulang tahun yah, Barakallahu Fii Umrik. Semoga tetap
+        diberikan kesehatan, semoga diberikan kelancaran di setiap
+        langkahmu. Semoga <strong>Allah SWT</strong> melindungimu di
+        setiap prosesmu. Beribu ribu kata tak bisa diungkapkan untuk
+        mendeskripsikan sesosok <strong>Icha Sabillah Anjani</strong>.
+        Semoga selalu mendapat hidayah dan selalu diberikan kemudahan
+        dalam setiap urusanmu. Semoga selalu diberikan kebahagiaan,
+        kesuksesan, dan keberkahan di setiap langkahmu.
+      </p>
+      <p class="body-text">
+        <span class="accent">Semoga kamu tetap bahagia selamanya.</span>
+        Kado terindah yang diberikan Tuhan adalah kebahagiaan. Semoga
+        di umur kamu yang menginjak 22 tahun ini bisa menggapai semua
+        mimpimu. Apa yang kamu impikan selama ini semoga segera terwujud.
       </p>
 
       <div class="slideshow" id="slideshow">
+        <!-- Ganti src di bawah dengan foto asli: foto1.jpg, foto2.jpg, foto3.jpg -->
         <img src="foto1.jpg" alt="Kenangan 1" class="show">
         <img src="foto2.jpg" alt="Kenangan 2">
         <img src="foto3.jpg" alt="Kenangan 3">
         <div class="slide-dots" id="slideDots"></div>
       </div>
 
-      <button class="btn btn-primary" id="startBtn">Mulai Kejutan ✨</button>
+      <button class="btn btn-primary" id="startBtn">Ada kejutan nih ✨</button>
     </div>
   </section>
 
+  <!-- ===================== HALAMAN 2 : SIAP-SIAP ===================== -->
   <section class="page" data-page="2">
     <div class="card">
-      <div class="step-indicator">
-        <span class="on"></span><span></span><span></span><span></span>
-      </div>
-      <p class="eyebrow">Kamu siaap?</p>
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <p class="eyebrow">Langkah pertama</p>
       <h1 class="title" style="font-size:1.6rem;">Ada sesuatu untukmu&hellip;</h1>
       <div class="divider"></div>
       <p class="body-text">
-        Oh iya ada sesuatu nih dalam kontak itu, buka pelan2 yah sambil lihat instruksinya😉
+        Oh iya, kamu bisa buka pelan-pelan yah sambil lihat instruksinya 😉<br>
+        Kamu siapp?
       </p>
-      <!-- <div class="gift-tag">
-        <div class="num">01</div>
-        <div class="txt">Buka <strong>Kado Fisik Nomor 1</strong> yang sudah kusiapkan untukmu, lalu lanjutkan membaca di sini ya 🎁</div>
-      </div> -->
 
-      <button class="btn btn-primary next-btn" data-target="3">Lanjut yah</button>
+      <div class="nav-row">
+        <button class="btn btn-secondary btn-back prev-btn" aria-label="Kembali">←</button>
+        <button class="btn btn-primary next-btn">Lanjut yah</button>
+      </div>
     </div>
   </section>
 
+  <!-- ===================== HALAMAN 3 : KADO 1 ===================== -->
   <section class="page" data-page="3">
     <div class="card">
-      <div class="step-indicator">
-        <span class="on"></span><span class="on"></span><span></span><span></span>
-      </div>
-      <p class="eyebrow">Kado pertama nih</p>
-      <h1 class="title" style="font-size:1.6rem;">Satu lagi, untukmu&hellip;</h1>
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <p class="eyebrow">Buka kado nomor 1 yaahh</p>
+      <h1 class="title" style="font-size:1.6rem;">Haiii&hellip;</h1>
       <div class="divider"></div>
       <p class="body-text">
-        Terima kasih sudah sejauh ini menemaniku dalam kejutan kecil ini.
-        Sekarang, ada satu kado lagi yang menurutku pas untuk melengkapi
-        harimu. Semoga setiap detailnya terasa seperti pelukan dariku.
+        Di Malang sekarang lagi dingin yaa? Pasti dingin banget apalagi
+        bentar lagi musim maba, hahaha.<br>
+        Dinginnya tuh ngga ketulungan, masa iya Malang dingin banget tapi
+        ngga ada yang ngasih jaket ke kamu, kan? Semoga dengan jaket ini
+        bisa membantu menghangatkanmu 🥰 biar kamu tetap terjaga dan ngga
+        kedinginan 🥶.<br>
+        Dipakai ya jaketnya biar tetap fit waktu kegiatan nanti pasti
+        dingin parahh.
       </p>
 
       <div class="gift-tag">
-        <div class="num">02</div>
-        <div class="txt">Sekarang buka <strong>Kado Fisik Nomor 2</strong>, lalu kembali lagi ke sini untuk bagian terakhir 🎀</div>
+        <div class="num">1</div>
+        <div class="txt">Sekarang buka <strong>Kado Nomor 1</strong> yang sudah kusiapkan untukmu, lalu lanjutkan membaca di sini ya 🎀</div>
       </div>
 
-      <button class="btn btn-primary next-btn" data-target="4">Ada satu hal lagi... ➡️</button>
+      <div class="nav-row">
+        <button class="btn btn-secondary btn-back prev-btn" aria-label="Kembali">←</button>
+        <button class="btn btn-primary next-btn">Ada lagi nihh ➡️</button>
+      </div>
     </div>
   </section>
 
-  <!-- ===================== HALAMAN 4 : PENUTUP ===================== -->
+  <!-- ===================== HALAMAN 4 : KADO 2 ===================== -->
   <section class="page" data-page="4">
     <div class="card">
-      <div class="step-indicator">
-        <span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span>
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <p class="eyebrow">Buka kado nomor 2 nya yaahh</p>
+      <h1 class="title" style="font-size:1.6rem;">Coba tebakk&hellip;</h1>
+      <div class="divider"></div>
+      <p class="body-text">
+        Oiya, kebetulan kamu bakal sering berkegiatan di lapangan yaa,<br>
+        kado ini juga bisa kamu pakai buat berkegiatan, semoga pas dan
+        cocok yaa. Menurutku sih pas dan cocok yah. Capek banget tauu
+        kegiatan di lapangan nantinyaa.
+      </p>
+
+      <div class="gift-tag">
+        <div class="num">2</div>
+        <div class="txt">Sekarang buka <strong>Kado Nomor 2</strong> yang sudah kusiapkan untukmu, lalu lanjutkan membaca di sini ya 🎀</div>
       </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary btn-back prev-btn" aria-label="Kembali">←</button>
+        <button class="btn btn-primary next-btn">Ada lagi nihh ➡️</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== HALAMAN 5 : KADO 3 ===================== -->
+  <!-- GANTI teks & nama barang di bawah sesuai kado ke-3 yang sebenarnya kamu siapkan -->
+  <section class="page" data-page="5">
+    <div class="card">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <p class="eyebrow">Buka kado nomor 3 yaahh</p>
+      <h1 class="title" style="font-size:1.6rem;">Satu lagi nihh&hellip;</h1>
+      <div class="divider"></div>
+      <p class="body-text">
+        Kado yang ini aku pilih sambil kebayang wajahmu waktu buka
+        bungkusnya nanti, hehe. Semoga suka yaa, semoga juga kepakai
+        terus buat kegiatan sehari-harimu.<br>
+        Kecil sih bentuknya, tapi semoga artinya besar buatmu 🤍
+      </p>
+
+      <div class="gift-tag">
+        <div class="num">3</div>
+        <div class="txt">Sekarang buka <strong>Kado Nomor 3</strong> yang sudah kusiapkan untukmu, lalu lanjutkan membaca di sini ya 🎀</div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary btn-back prev-btn" aria-label="Kembali">←</button>
+        <button class="btn btn-primary next-btn">Terakhir nihh ➡️</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== HALAMAN 6 : KADO 4 ===================== -->
+  <!-- GANTI teks & nama barang di bawah sesuai kado ke-4 yang sebenarnya kamu siapkan -->
+  <section class="page" data-page="6">
+    <div class="card">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <p class="eyebrow">Buka kado nomor 4 yaahh</p>
+      <h1 class="title" style="font-size:1.6rem;">Kado terakhir&hellip;</h1>
+      <div class="divider"></div>
+      <p class="body-text">
+        Ini kado terakhir dari empat yang kusiapkan, tapi bukan berarti
+        rasa sayangku ada batasnya yaa. Semoga tiap kali kamu pakai atau
+        lihat ini, kamu ingat ada aku yang selalu mendoakanmu dari jauh.
+      </p>
+
+      <div class="gift-tag">
+        <div class="num">4</div>
+        <div class="txt">Sekarang buka <strong>Kado Nomor 4</strong>, yang terakhir, lalu lanjutkan membaca di sini ya 🎀</div>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary btn-back prev-btn" aria-label="Kembali">←</button>
+        <button class="btn btn-primary next-btn">Ada sedikit cerita lagi ➡️</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== HALAMAN 7-10 : SEPENGGAL RASA (kata-kata sebelum surat penutup) ============== -->
+  <!-- Ganti isi paragraf di 4 halaman ini bebas sesuai apa yang ingin kamu sampaikan -->
+  <section class="page" data-page="7">
+    <div class="card">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <p class="eyebrow">Sepenggal rasa · 1/4</p>
+      <h1 class="title" style="font-size:1.6rem;">Sebelum lanjut&hellip;</h1>
+      <div class="divider"></div>
+      <p class="body-text">
+        Aku mau cerita sedikit sebelum surat ini berakhir. Dari semua
+        hal baik yang pernah terjadi di hidupku tahun ini, kamu ada di
+        urutan paling atas. Bukan karena kamu sempurna, tapi karena kamu
+        selalu berusaha ada, bahkan di hari-hari yang berat sekalipun.
+      </p>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary btn-back prev-btn" aria-label="Kembali">←</button>
+        <button class="btn btn-primary next-btn">Lanjut ➡️</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" data-page="8">
+    <div class="card">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <p class="eyebrow">Sepenggal rasa · 2/4</p>
+      <h1 class="title" style="font-size:1.6rem;">Tentang kamu&hellip;</h1>
+      <div class="divider"></div>
+      <p class="body-text">
+        Kamu itu jenis orang yang bikin hal-hal kecil jadi terasa
+        berarti. Obrolan singkat kita di sela hari yang sibuk, candaan
+        receh yang cuma kita berdua yang paham, semuanya jadi alasan
+        aku selalu ingin cerita ke kamu duluan.
+      </p>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary btn-back prev-btn" aria-label="Kembali">←</button>
+        <button class="btn btn-primary next-btn">Lanjut ➡️</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" data-page="9">
+    <div class="card">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <p class="eyebrow">Sepenggal rasa · 3/4</p>
+      <h1 class="title" style="font-size:1.6rem;">Tentang kita&hellip;</h1>
+      <div class="divider"></div>
+      <p class="body-text">
+        Aku ngga tau ke depannya bakal seperti apa, tapi aku tau satu
+        hal: aku ingin terus ada di setiap cerita baikmu. Ingin jadi
+        tempat kamu pulang saat capek, dan jadi orang pertama yang tau
+        kabar baikmu.
+      </p>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary btn-back prev-btn" aria-label="Kembali">←</button>
+        <button class="btn btn-primary next-btn">Lanjut ➡️</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" data-page="10">
+    <div class="card">
+      <div class="progress-track"><div class="progress-fill"></div></div>
+      <p class="eyebrow">Sepenggal rasa · 4/4</p>
+      <h1 class="title" style="font-size:1.6rem;">Terakhir, sebelum surat ini&hellip;</h1>
+      <div class="divider"></div>
+      <p class="body-text">
+        Terima kasih sudah bertahan sejauh ini bersamaku, dan terima
+        kasih sudah menemaniku sampai halaman terakhir dari kejutan
+        kecil ini. Satu halaman lagi, ya. Aku janji ini yang paling
+        aku tunggu untuk kamu baca 🤍
+      </p>
+
+      <div class="nav-row">
+        <button class="btn btn-secondary btn-back prev-btn" aria-label="Kembali">←</button>
+        <button class="btn btn-primary next-btn">Buka surat terakhir 💌</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== HALAMAN 11 : PENUTUP ===================== -->
+  <section class="page" data-page="11">
+    <div class="card">
+      <div class="progress-track"><div class="progress-fill"></div></div>
       <p class="eyebrow">Sepucuk surat, untukmu</p>
       <h1 class="title" style="font-size:1.6rem;">Terima Kasih, Telah Ada</h1>
       <div class="divider"></div>
@@ -474,7 +688,10 @@ Kado terindah yang diberikan Tuhan adalah kebahagiaan. Semoga kamu tetap bahagia
         <p class="cam-status" id="camStatus"></p>
       </div>
 
-      <button class="btn btn-whatsapp" id="sendWaBtn">Kirim Balasan ke WhatsApp 💬</button>
+      <div class="nav-row">
+        <button class="btn btn-secondary btn-back prev-btn" aria-label="Kembali">←</button>
+        <button class="btn btn-whatsapp" id="sendWaBtn">Kirim Balasan ke WhatsApp 💬</button>
+      </div>
     </div>
   </section>
 
@@ -500,13 +717,24 @@ if (window.emailjs && EMAILJS_PUBLIC_KEY.indexOf('GANTI_') === -1) {
 }
 
 /* =========================================================
-   1. NAVIGASI ANTAR HALAMAN DENGAN FADE TRANSITION
+   1. NAVIGASI ANTAR HALAMAN (FADE TRANSITION + BACK/NEXT)
+   PAGE_ORDER menentukan urutan halaman untuk tombol back/next.
+   Kalau nanti mau menambah/mengurangi halaman, cukup ubah
+   array ini dan tambah/hapus <section data-page="..."> yang sesuai.
 ========================================================= */
-const pages = document.querySelectorAll('.page');
+const PAGE_ORDER = ['1','2','3','4','5','6','7','8','9','10','11'];
 
-function goToPage(targetNum){
+function updateProgress(pageId){
+  const idx = PAGE_ORDER.indexOf(pageId);
+  const percent = idx <= 0 ? 0 : Math.round((idx / (PAGE_ORDER.length - 1)) * 100);
+  document.querySelectorAll('.progress-fill').forEach(el=>{
+    el.style.width = percent + '%';
+  });
+}
+
+function goToPage(targetId){
   const current = document.querySelector('.page.active');
-  const target = document.querySelector(`.page[data-page="${targetNum}"]`);
+  const target = document.querySelector(`.page[data-page="${targetId}"]`);
   if(!current || !target || current === target) return;
 
   current.classList.remove('fade-in');
@@ -515,14 +743,24 @@ function goToPage(targetNum){
   setTimeout(()=>{
     current.classList.remove('active','fade-out');
     target.classList.add('active','fade-in');
+    updateProgress(targetId);
     window.scrollTo({top:0, behavior:'smooth'});
   }, 480);
 }
 
+function goRelative(delta){
+  const current = document.querySelector('.page.active');
+  const currentIdx = PAGE_ORDER.indexOf(current.dataset.page);
+  const targetIdx = currentIdx + delta;
+  if(targetIdx < 0 || targetIdx >= PAGE_ORDER.length) return;
+  goToPage(PAGE_ORDER[targetIdx]);
+}
+
 document.querySelectorAll('.next-btn').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    goToPage(btn.dataset.target);
-  });
+  btn.addEventListener('click', ()=> goRelative(1));
+});
+document.querySelectorAll('.prev-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=> goRelative(-1));
 });
 
 /* =========================================================
@@ -555,7 +793,7 @@ document.querySelectorAll('.next-btn').forEach(btn=>{
    3. PLAYLIST MUSIK LATAR TERSEMBUNYI (AUTO-NEXT)
    Taruh file lagu1.mp3 s/d lagu5.mp3 (bisa kurang dari 5)
    sejajar dengan index.html. Musik mulai persis saat tombol
-   "Mulai Kejutan" diklik, lalu lanjut otomatis ke lagu berikutnya.
+   "Ada kejutan nih" diklik, lalu lanjut otomatis ke lagu berikutnya.
 ========================================================= */
 const playlist = ['lagu1.mp3','lagu2.mp3','lagu3.mp3','lagu4.mp3','lagu5.mp3'];
 let songIndex = 0;
@@ -573,7 +811,7 @@ player.addEventListener('ended', ()=>{
 
 document.getElementById('startBtn').addEventListener('click', ()=>{
   playCurrentSong();      // musik mulai tepat saat interaksi pertama
-  goToPage(2);
+  goRelative(1);
 });
 
 /* =========================================================
@@ -678,7 +916,7 @@ document.getElementById('sendWaBtn').addEventListener('click', ()=>{
 
   // --- 5b. Tetap buka WhatsApp seperti biasa, sebagai jalur cadangan ---
   // GANTI NOMOR DI BAWAH INI dengan nomor WhatsApp tujuan (format: 62xxxxxxxxxx, tanpa "+")
-  const nomorWA = '6281234567890';
+  const nomorWA = '6281456103595';
 
   const teksAkhir = pesan
     ? `Halo sayang, ini balasanku untuk surat ulang tahunmu:\n\n"${pesan}"`
@@ -689,7 +927,7 @@ document.getElementById('sendWaBtn').addEventListener('click', ()=>{
 });
 
 /* =========================================================
-   5. PARTIKEL LATAR: HATI & KELOPAK BUNGA BERGUGURAN
+   6. PARTIKEL LATAR: HATI & KELOPAK BUNGA BERGUGURAN
 ========================================================= */
 (function initPetals(){
   const canvas = document.getElementById('petal-canvas');
