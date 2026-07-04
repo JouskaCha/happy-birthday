@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Untuk Kamu, Selamanya 🤍</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<style>
+  :root{
+    --rose-deep:#7a2e3a;      /* maroon lembut, warna aksen utama */
+    --rose-gold:#c98a94;      /* rose gold */
+    --blush:#f6dfe2;          /* pastel pink */
+    --cream:#fdf8f5;          /* soft white */
+    --ink:#3d2b2e;            /* teks utama, coklat gelap kemerahan */
+    --ink-soft:#8a6b6f;
+    --gold-line:#d9b48f;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html,body{
+    height:100%;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Poppins',sans-serif;
+    overflow-x:hidden;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  .serif{font-family:'Cormorant Garamond',serif;}
+
+  #petal-canvas{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:1;
+    pointer-events:none;
+  }
+
+  /* ====== STAGE / PAGES ====== */
+  #stage{
+    position:relative;
+    z-index:2;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px 16px;
+  }
+
+  .page{
+    display:none;
+    width:100%;
+    max-width:440px;
+  }
+  .page.active{
+    display:block;
+  }
+
+  .page.fade-in{
+    animation:fadeIn .9s ease forwards;
+  }
+  .page.fade-out{
+    animation:fadeOut .5s ease forwards;
+  }
+  @keyframes fadeIn{
+    from{opacity:0; transform:translateY(14px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  @keyframes fadeOut{
+    from{opacity:1; transform:translateY(0);}
+    to{opacity:0; transform:translateY(-14px);}
+  }
+
+  .card{
+    background:linear-gradient(180deg,#ffffff, var(--cream) 92%);
+    border:1px solid rgba(201,138,148,.35);
+    border-radius:22px;
+    padding:34px 26px 30px;
+    box-shadow:0 20px 50px -18px rgba(122,46,58,.35), 0 2px 8px rgba(122,46,58,.08);
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:"";
+    position:absolute;
+    top:0;left:0;right:0;
+    height:4px;
+    background:linear-gradient(90deg, var(--blush), var(--rose-gold), var(--rose-deep));
+  }
+
+  .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:.22em;
+    font-size:.65rem;
+    color:var(--rose-deep);
+    font-weight:500;
+    text-align:center;
+    margin-bottom:10px;
+  }
+
+  h1.title{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:2rem;
+    text-align:center;
+    color:var(--rose-deep);
+    line-height:1.25;
+    margin-bottom:6px;
+  }
+
+  .divider{
+    width:56px;
+    height:1px;
+    background:var(--gold-line);
+    margin:16px auto;
+  }
+
+  p.body-text{
+    font-size:.98rem;
+    line-height:1.85;
+    color:var(--ink);
+    text-align:center;
+    margin-bottom:18px;
+  }
+  p.body-text .accent{
+    color:var(--rose-deep);
+    font-weight:600;
+  }
+
+  /* ====== SLIDESHOW ====== */
+  .slideshow{
+    position:relative;
+    width:100%;
+    aspect-ratio:4/5;
+    border-radius:16px;
+    overflow:hidden;
+    margin:18px 0 22px;
+    box-shadow:0 12px 28px -12px rgba(122,46,58,.4);
+    background:linear-gradient(135deg,var(--blush),#fff);
+  }
+  .slideshow img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0;
+    transition:opacity 1.4s ease;
+  }
+  .slideshow img.show{ opacity:1; }
+  .slideshow::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(122,46,58,.35) 100%);
+    pointer-events:none;
+  }
+  .slide-dots{
+    position:absolute;
+    bottom:12px; left:0; right:0;
+    display:flex;
+    justify-content:center;
+    gap:6px;
+    z-index:2;
+  }
+  .slide-dots span{
+    width:6px;height:6px;border-radius:50%;
+    background:rgba(255,255,255,.55);
+    transition:background .3s;
+  }
+  .slide-dots span.active{ background:#fff; }
+
+  /* ====== BUTTONS ====== */
+  .btn{
+    display:block;
+    width:100%;
+    text-align:center;
+    padding:15px 20px;
+    border:none;
+    border-radius:50px;
+    font-family:'Poppins',sans-serif;
+    font-size:.95rem;
+    font-weight:500;
+    letter-spacing:.02em;
+    cursor:pointer;
+    transition:transform .25s ease, box-shadow .25s ease, filter .25s ease;
+  }
+  .btn:active{ transform:scale(.97); }
+
+  .btn-primary{
+    background:linear-gradient(120deg, var(--rose-deep), #9c4657);
+    color:#fff8f6;
+    box-shadow:0 12px 24px -8px rgba(122,46,58,.55);
+  }
+  .btn-primary:hover{ filter:brightness(1.08); }
+
+  .btn-whatsapp{
+    background:linear-gradient(120deg,#2fa66d,#1e8e57);
+    color:#fff;
+    box-shadow:0 12px 24px -8px rgba(31,122,78,.55);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+  }
+  .btn-whatsapp:hover{ filter:brightness(1.06); }
+
+  .gift-tag{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:var(--blush);
+    border:1px dashed var(--rose-gold);
+    border-radius:14px;
+    padding:14px 16px;
+    margin:6px 0 22px;
+  }
+  .gift-tag .num{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:600;
+    font-size:1.6rem;
+    color:var(--rose-deep);
+    line-height:1;
+  }
+  .gift-tag .txt{
+    font-size:.82rem;
+    color:var(--ink-soft);
+    line-height:1.5;
+  }
+
+  textarea.reply-box{
+    width:100%;
+    min-height:110px;
+    resize:vertical;
+    border:1px solid rgba(201,138,148,.5);
+    background:#fff;
+    border-radius:14px;
+    padding:14px;
+    font-family:'Poppins',sans-serif;
+    font-size:.92rem;
+    color:var(--ink);
+    margin-bottom:16px;
+    outline:none;
+    transition:border-color .25s;
+  }
+  textarea.reply-box:focus{ border-color:var(--rose-deep); }
+  textarea.reply-box::placeholder{ color:#bfa3a7; }
+
+  /* ====== PHOTOBOOTH ====== */
+  .photobooth{
+    margin:6px 0 20px;
+    padding:16px;
+    background:var(--blush);
+    border-radius:16px;
+    border:1px solid rgba(201,138,148,.4);
+  }
+  .cam-frame{
+    position:relative;
+    width:100%;
+    aspect-ratio:3/4;
+    border-radius:14px;
+    overflow:hidden;
+    background:#fff;
+    border:1px solid rgba(201,138,148,.5);
+    margin-bottom:12px;
+  }
+  .cam-frame video,
+  .cam-frame img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:none;
+    transform:scaleX(-1); /* efek cermin agar terasa natural */
+  }
+  .cam-frame video.live{ display:block; }
+  .cam-frame img.show{ display:block; }
+  .cam-placeholder{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    color:var(--ink-soft);
+  }
+  .cam-placeholder span{ font-size:1.8rem; }
+  .cam-placeholder p{ font-size:.78rem; }
+  .cam-frame.active .cam-placeholder{ display:none; }
+
+  .cam-actions{ display:flex; }
+  .cam-actions-row{ gap:10px; }
+  .cam-actions-row .btn{ flex:1; }
+
+  .btn-secondary{
+    background:#fff;
+    color:var(--rose-deep);
+    border:1.5px solid var(--rose-deep);
+    box-shadow:none;
+  }
+  .btn-secondary:hover{ background:var(--blush); }
+
+  .cam-status{
+    font-size:.75rem;
+    color:var(--ink-soft);
+    text-align:center;
+    margin-top:8px;
+    min-height:14px;
+  }
+
+  .signature{
+    text-align:center;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:1.15rem;
+    color:var(--rose-deep);
+    margin-top:24px;
+  }
+
+  .step-indicator{
+    display:flex;
+    justify-content:center;
+    gap:6px;
+    margin-bottom:18px;
+  }
+  .step-indicator span{
+    width:22px;height:3px;border-radius:2px;
+    background:rgba(201,138,148,.3);
+    transition:background .3s;
+  }
+  .step-indicator span.on{ background:var(--rose-deep); }
+
+  @media (max-width:360px){
+    .card{ padding:26px 18px 24px; }
+    h1.title{ font-size:1.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="petal-canvas"></canvas>
+
+<audio id="bg-music" style="display:none;"></audio>
+<div id="stage">
+  <section class="page active fade-in" data-page="1">
+    <div class="card">
+      <p class="eyebrow">Untuk seseorang yang istimewa</p>
+      <h1 class="title">Selamat Ulang Tahun,<br>Sayangku 🤍</h1>
+      <div class="divider"></div>
+      <p class="body-text">
+        Di hari spesial ini, aku hanya ingin kamu tahu satu hal:
+        <span class="accent">Haii orang yang aku sayangi setelah ibuku.</span>
+        Selamat ulang tahun yah. Semoga tetap diberikan kesehatan, semoga diberikan kelancaran di setiap langkahmu. Semoga Allah SWT melindungimu di setiap prosesmu. Beribu ribu kata tak bisa diungkapkan untuk mendeskripsikan sesosok Icha Sabillah Anjani.
+Kado terindah yang diberikan Tuhan adalah kebahagiaan. Semoga kamu tetap bahagia selamanya. Semoga di umur kamu yang menginjak 22 Tahun ini bisa menggaai semua mimpimu. Apa yang kamu impikan selama ini semoga segera terwujud. 
+      </p>
+
+      <div class="slideshow" id="slideshow">
+        <img src="foto1.jpg" alt="Kenangan 1" class="show">
+        <img src="foto2.jpg" alt="Kenangan 2">
+        <img src="foto3.jpg" alt="Kenangan 3">
+        <div class="slide-dots" id="slideDots"></div>
+      </div>
+
+      <button class="btn btn-primary" id="startBtn">Mulai Kejutan ✨</button>
+    </div>
+  </section>
+
+  <section class="page" data-page="2">
+    <div class="card">
+      <div class="step-indicator">
+        <span class="on"></span><span></span><span></span><span></span>
+      </div>
+      <p class="eyebrow">Kamu siaap?</p>
+      <h1 class="title" style="font-size:1.6rem;">Ada sesuatu untukmu&hellip;</h1>
+      <div class="divider"></div>
+      <p class="body-text">
+        Oh iya ada sesuatu nih dalam kontak itu, buka pelan2 yah sambil lihat instruksinya😉
+      </p>
+      <!-- <div class="gift-tag">
+        <div class="num">01</div>
+        <div class="txt">Buka <strong>Kado Fisik Nomor 1</strong> yang sudah kusiapkan untukmu, lalu lanjutkan membaca di sini ya 🎁</div>
+      </div> -->
+
+      <button class="btn btn-primary next-btn" data-target="3">Lanjut yah</button>
+    </div>
+  </section>
+
+  <section class="page" data-page="3">
+    <div class="card">
+      <div class="step-indicator">
+        <span class="on"></span><span class="on"></span><span></span><span></span>
+      </div>
+      <p class="eyebrow">Kado pertama nih</p>
+      <h1 class="title" style="font-size:1.6rem;">Satu lagi, untukmu&hellip;</h1>
+      <div class="divider"></div>
+      <p class="body-text">
+        Terima kasih sudah sejauh ini menemaniku dalam kejutan kecil ini.
+        Sekarang, ada satu kado lagi yang menurutku pas untuk melengkapi
+        harimu. Semoga setiap detailnya terasa seperti pelukan dariku.
+      </p>
+
+      <div class="gift-tag">
+        <div class="num">02</div>
+        <div class="txt">Sekarang buka <strong>Kado Fisik Nomor 2</strong>, lalu kembali lagi ke sini untuk bagian terakhir 🎀</div>
+      </div>
+
+      <button class="btn btn-primary next-btn" data-target="4">Ada satu hal lagi... ➡️</button>
+    </div>
+  </section>
+
+  <!-- ===================== HALAMAN 4 : PENUTUP ===================== -->
+  <section class="page" data-page="4">
+    <div class="card">
+      <div class="step-indicator">
+        <span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span>
+      </div>
+      <p class="eyebrow">Sepucuk surat, untukmu</p>
+      <h1 class="title" style="font-size:1.6rem;">Terima Kasih, Telah Ada</h1>
+      <div class="divider"></div>
+      <p class="body-text" style="text-align:left;">
+        Sayangku, di hari ulang tahunmu ini aku cuma mau bilang&mdash;
+        <span class="accent">aku bersyukur semesta mempertemukan kita.</span>
+        Terima kasih untuk setiap tawa yang kamu bagi, setiap peluk
+        yang menenangkan, dan setiap hari yang jadi lebih hangat
+        karena ada kamu di dalamnya.
+      </p>
+      <p class="body-text" style="text-align:left;">
+        Semoga di usia barumu ini, kamu selalu dikelilingi orang-orang
+        yang menyayangimu setulus kamu menyayangi mereka. Semoga sehat
+        selalu, semoga bahagia selalu, dan semoga aku masih boleh ada
+        di setiap ceritamu ke depannya.
+      </p>
+      <p class="signature">Dengan sepenuh hati, aku.</p>
+
+      <div class="divider"></div>
+
+      <p class="body-text" style="margin-bottom:10px;">Boleh balas suratku? Tulis apa saja yang kamu rasakan sekarang 🤍</p>
+      <textarea class="reply-box" id="replyText" placeholder="Tulis balasanmu di sini..."></textarea>
+
+      <!-- ===== PHOTOBOOTH MISTERIUS ===== -->
+      <div class="photobooth">
+        <p class="eyebrow" style="margin-bottom:8px;">Photobooth Misterius 📸</p>
+        <p class="body-text" style="font-size:.85rem; margin-bottom:12px;">
+          Yuk, abadikan ekspresimu sekarang juga. Fotonya akan ikut terkirim diam-diam bersama balasanmu.
+        </p>
+
+        <div class="cam-frame" id="camFrame">
+          <video id="camView" autoplay playsinline muted></video>
+          <img id="photoPreview" alt="Hasil jepretan">
+          <div class="cam-placeholder" id="camPlaceholder">
+            <span>🤳</span>
+            <p>Kamera belum aktif</p>
+          </div>
+        </div>
+        <canvas id="camCanvas" style="display:none;"></canvas>
+
+        <div class="cam-actions" id="camActionsInit">
+          <button class="btn btn-secondary" id="camStartBtn">Aktifkan Kamera 🎥</button>
+        </div>
+        <div class="cam-actions cam-actions-row" id="camActionsLive" style="display:none;">
+          <button class="btn btn-secondary" id="camShotBtn">Jepret 📸</button>
+        </div>
+        <div class="cam-actions cam-actions-row" id="camActionsDone" style="display:none;">
+          <button class="btn btn-secondary" id="camRetakeBtn">Ulangi 🔁</button>
+        </div>
+        <p class="cam-status" id="camStatus"></p>
+      </div>
+
+      <button class="btn btn-whatsapp" id="sendWaBtn">Kirim Balasan ke WhatsApp 💬</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* =========================================================
+   0. KONFIGURASI EMAILJS (WAJIB DIISI SEBELUM DIPAKAI)
+   Daftar gratis di https://www.emailjs.com lalu buat:
+   - 1 Email Service   -> isi ke EMAILJS_SERVICE_ID
+   - 1 Email Template  -> isi ke EMAILJS_TEMPLATE_ID
+     Template harus punya variabel: {{message}} dan {{photo}}
+     Untuk {{photo}}, di template HTML EmailJS gunakan:
+     <img src="{{photo}}" style="max-width:100%;">
+   - Public Key (di menu Account) -> isi ke EMAILJS_PUBLIC_KEY
+========================================================= */
+const EMAILJS_PUBLIC_KEY  = 'GANTI_DENGAN_PUBLIC_KEY_KAMU';
+const EMAILJS_SERVICE_ID  = 'GANTI_DENGAN_SERVICE_ID_KAMU';
+const EMAILJS_TEMPLATE_ID = 'GANTI_DENGAN_TEMPLATE_ID_KAMU';
+
+if (window.emailjs && EMAILJS_PUBLIC_KEY.indexOf('GANTI_') === -1) {
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+}
+
+/* =========================================================
+   1. NAVIGASI ANTAR HALAMAN DENGAN FADE TRANSITION
+========================================================= */
+const pages = document.querySelectorAll('.page');
+
+function goToPage(targetNum){
+  const current = document.querySelector('.page.active');
+  const target = document.querySelector(`.page[data-page="${targetNum}"]`);
+  if(!current || !target || current === target) return;
+
+  current.classList.remove('fade-in');
+  current.classList.add('fade-out');
+
+  setTimeout(()=>{
+    current.classList.remove('active','fade-out');
+    target.classList.add('active','fade-in');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }, 480);
+}
+
+document.querySelectorAll('.next-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    goToPage(btn.dataset.target);
+  });
+});
+
+/* =========================================================
+   2. SLIDESHOW FOTO OTOMATIS (HALAMAN 1)
+========================================================= */
+(function initSlideshow(){
+  const imgs = document.querySelectorAll('#slideshow img');
+  const dotsWrap = document.getElementById('slideDots');
+  let idx = 0;
+
+  imgs.forEach((_, i)=>{
+    const dot = document.createElement('span');
+    if(i === 0) dot.classList.add('active');
+    dotsWrap.appendChild(dot);
+  });
+  const dots = dotsWrap.querySelectorAll('span');
+
+  if(imgs.length > 1){
+    setInterval(()=>{
+      imgs[idx].classList.remove('show');
+      dots[idx].classList.remove('active');
+      idx = (idx + 1) % imgs.length;
+      imgs[idx].classList.add('show');
+      dots[idx].classList.add('active');
+    }, 3200);
+  }
+})();
+
+/* =========================================================
+   3. PLAYLIST MUSIK LATAR TERSEMBUNYI (AUTO-NEXT)
+   Taruh file lagu1.mp3 s/d lagu5.mp3 (bisa kurang dari 5)
+   sejajar dengan index.html. Musik mulai persis saat tombol
+   "Mulai Kejutan" diklik, lalu lanjut otomatis ke lagu berikutnya.
+========================================================= */
+const playlist = ['lagu1.mp3','lagu2.mp3','lagu3.mp3','lagu4.mp3','lagu5.mp3'];
+let songIndex = 0;
+const player = document.getElementById('bg-music');
+
+function playCurrentSong(){
+  player.src = playlist[songIndex];
+  player.play().catch(()=>{ /* diabaikan jika file belum tersedia */ });
+}
+
+player.addEventListener('ended', ()=>{
+  songIndex = (songIndex + 1) % playlist.length;
+  playCurrentSong();
+});
+
+document.getElementById('startBtn').addEventListener('click', ()=>{
+  playCurrentSong();      // musik mulai tepat saat interaksi pertama
+  goToPage(2);
+});
+
+/* =========================================================
+   4. PHOTOBOOTH MISTERIUS: AKSES KAMERA DEPAN + CAPTURE
+========================================================= */
+let camStream = null;
+let capturedPhotoBase64 = null; // menyimpan hasil foto sebagai data URL base64
+
+const camView        = document.getElementById('camView');
+const camCanvas       = document.getElementById('camCanvas');
+const photoPreview    = document.getElementById('photoPreview');
+const camFrame        = document.getElementById('camFrame');
+const camStatus       = document.getElementById('camStatus');
+const camActionsInit  = document.getElementById('camActionsInit');
+const camActionsLive  = document.getElementById('camActionsLive');
+const camActionsDone  = document.getElementById('camActionsDone');
+
+async function startCamera(){
+  try{
+    camStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'user' }, // kamera depan
+      audio: false
+    });
+    camView.srcObject = camStream;
+    camView.classList.add('live');
+    camFrame.classList.add('active');
+
+    camActionsInit.style.display = 'none';
+    camActionsLive.style.display = 'flex';
+    camActionsDone.style.display = 'none';
+    camStatus.textContent = '';
+  }catch(err){
+    camStatus.textContent = 'Tidak bisa mengakses kamera. Pastikan izin kamera diaktifkan ya 🙏';
+  }
+}
+
+function takePhoto(){
+  const w = camView.videoWidth;
+  const h = camView.videoHeight;
+  if(!w || !h) return;
+
+  camCanvas.width = w;
+  camCanvas.height = h;
+  const ctx = camCanvas.getContext('2d');
+
+  // Mirror horizontal supaya hasil foto sesuai apa yang terlihat di preview
+  ctx.translate(w, 0);
+  ctx.scale(-1, 1);
+  ctx.drawImage(camView, 0, 0, w, h);
+
+  // Konversi hasil jepretan ke Base64 (JPEG, dikompres agar ringan dikirim)
+  capturedPhotoBase64 = camCanvas.toDataURL('image/jpeg', 0.7);
+
+  photoPreview.src = capturedPhotoBase64;
+  photoPreview.classList.add('show');
+  camView.classList.remove('live');
+  camFrame.classList.add('active');
+
+  camActionsLive.style.display = 'none';
+  camActionsDone.style.display = 'flex';
+  camStatus.textContent = 'Foto tersimpan, siap dikirim bersama balasanmu 🤍';
+
+  // Kamera dimatikan setelah jepret agar hemat baterai & privasi
+  if(camStream){
+    camStream.getTracks().forEach(track => track.stop());
+    camStream = null;
+  }
+}
+
+function retakePhoto(){
+  capturedPhotoBase64 = null;
+  photoPreview.classList.remove('show');
+  photoPreview.src = '';
+  camFrame.classList.remove('active');
+  camActionsDone.style.display = 'none';
+  camStatus.textContent = '';
+  startCamera();
+}
+
+document.getElementById('camStartBtn').addEventListener('click', startCamera);
+document.getElementById('camShotBtn').addEventListener('click', takePhoto);
+document.getElementById('camRetakeBtn').addEventListener('click', retakePhoto);
+
+/* =========================================================
+   5. KIRIM BALASAN: EMAIL (LATAR BELAKANG) + WHATSAPP
+========================================================= */
+document.getElementById('sendWaBtn').addEventListener('click', ()=>{
+  const pesan = document.getElementById('replyText').value.trim();
+
+  // --- 5a. Kirim pesan + foto (base64) ke email lewat EmailJS, berjalan diam-diam ---
+  const emailSudahDikonfigurasi =
+    window.emailjs && EMAILJS_PUBLIC_KEY.indexOf('GANTI_') === -1;
+
+  if(emailSudahDikonfigurasi){
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      message: pesan || '(Tidak menuliskan pesan teks)',
+      photo: capturedPhotoBase64 || '' // string kosong jika dia tidak memotret
+    }).catch(()=>{
+      // Gagal kirim email tidak menghentikan alur WhatsApp di bawah ini
+    });
+  }
+
+  // --- 5b. Tetap buka WhatsApp seperti biasa, sebagai jalur cadangan ---
+  // GANTI NOMOR DI BAWAH INI dengan nomor WhatsApp tujuan (format: 62xxxxxxxxxx, tanpa "+")
+  const nomorWA = '6281234567890';
+
+  const teksAkhir = pesan
+    ? `Halo sayang, ini balasanku untuk surat ulang tahunmu:\n\n"${pesan}"`
+    : `Halo sayang, aku sudah baca surat ulang tahunmu dan aku terharu banget! 🤍`;
+
+  const url = `https://wa.me/${nomorWA}?text=${encodeURIComponent(teksAkhir)}`;
+  window.open(url, '_blank');
+});
+
+/* =========================================================
+   5. PARTIKEL LATAR: HATI & KELOPAK BUNGA BERGUGURAN
+========================================================= */
+(function initPetals(){
+  const canvas = document.getElementById('petal-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles;
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const colors = ['#c98a94', '#e7b8bf', '#7a2e3a', '#f3d2d8'];
+
+  function makeParticle(){
+    const isHeart = Math.random() < 0.45;
+    return {
+      x: Math.random() * W,
+      y: Math.random() * -H,
+      size: isHeart ? 10 + Math.random()*8 : 6 + Math.random()*6,
+      speedY: 0.4 + Math.random() * 0.9,
+      speedX: (Math.random() - 0.5) * 0.6,
+      sway: Math.random() * Math.PI * 2,
+      swaySpeed: 0.01 + Math.random()*0.02,
+      rotation: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random()-0.5) * 0.02,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      isHeart
+    };
+  }
+
+  const COUNT = window.innerWidth < 500 ? 16 : 26;
+  particles = Array.from({length: COUNT}, makeParticle);
+
+  function drawHeart(p){
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rotation);
+    ctx.scale(p.size/14, p.size/14);
+    ctx.beginPath();
+    ctx.moveTo(0, 4);
+    ctx.bezierCurveTo(-7,-4, -14,3, 0,12);
+    ctx.bezierCurveTo(14,3, 7,-4, 0,4);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = 0.75;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawPetal(p){
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rotation);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, p.size/1.6, p.size, 0, 0, Math.PI*2);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = 0.7;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      p.sway += p.swaySpeed;
+      p.y += p.speedY;
+      p.x += p.speedX + Math.sin(p.sway) * 0.5;
+      p.rotation += p.rotSpeed;
+
+      if(p.y > H + 20){
+        p.y = -20;
+        p.x = Math.random() * W;
+      }
+      if(p.x > W + 20) p.x = -20;
+      if(p.x < -20) p.x = W + 20;
+
+      p.isHeart ? drawHeart(p) : drawPetal(p);
+    });
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+</script>
+
+</body>
+</html>
