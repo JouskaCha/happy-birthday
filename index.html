@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-<!-- SDK EmailJS: dipakai untuk mengirim pesan + foto photobooth ke email secara diam-diam di background -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <style>
   :root{
@@ -40,6 +39,38 @@
     height:100%;
     z-index:1;
     pointer-events:none;
+  }
+
+  .cover-page{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    background:linear-gradient(180deg,#fffdfb,#f6dfe2);
+  }
+
+  .letter-wrapper{
+      cursor:pointer;
+      animation:float 3s ease-in-out infinite;
+  }
+
+  .letter-image{
+      width:220px;
+      transition:.5s;
+  }
+
+  .letter-wrapper:hover .letter-image{
+      transform:scale(1.05);
+  }
+
+  @keyframes float{
+      0%,100%{
+          transform:translateY(0);
+      }
+      50%{
+          transform:translateY(-10px);
+      }
   }
 
   /* ====== STAGE / PAGES ====== */
@@ -385,20 +416,29 @@
 
 <div id="stage">
 
-  <!-- ===================== HALAMAN 1 : PEMBUKA ===================== -->
-  <section class="page active fade-in" data-page="1">
+  <section class="page active fade-in" data-page="cover">
+    <div class="cover-page">
+        <div class="letter-wrapper" id="openLetter">
+            <img src="surat.png" class="letter-image">
+            <h2>Untuk Icha Sabillah Anjani 🤍</h2>
+            <p>Sentuh surat ini untuk membukanya</p>
+        </div>
+    </div>
+</section>
+
+  <section class="page fade-in" data-page="1">
     <div class="card">
       <p class="eyebrow">Untuk seseorang yang istimewa</p>
       <h1 class="title">Selamat Ulang Tahun,<br>Icha Sabillah Anjani</h1>
       <div class="divider"></div>
       <p class="body-text">
         Di hari spesial ini, aku hanya ingin kamu tahu satu hal:<br>
-        <span class="accent">Haii orang yang aku sayangi setelah ibuku.</span>
+        <span class="accent">Haii wanita yang cantik dan baik hati.</span>
         Selamat ulang tahun yah, Barakallahu Fii Umrik. Semoga tetap
         diberikan kesehatan, semoga diberikan kelancaran di setiap
         langkahmu. Semoga <strong>Allah SWT</strong> melindungimu di
         setiap prosesmu. Beribu ribu kata tak bisa diungkapkan untuk
-        mendeskripsikan sesosok <strong>Icha Sabillah Anjani</strong>.
+        mendeskripsikan sosok <strong>Icha Sabillah Anjani</strong>.
         Semoga selalu mendapat hidayah dan selalu diberikan kemudahan
         dalam setiap urusanmu. Semoga selalu diberikan kebahagiaan,
         kesuksesan, dan keberkahan di setiap langkahmu.
@@ -430,7 +470,7 @@
       <h1 class="title" style="font-size:1.6rem;">Ada sesuatu untukmu&hellip;</h1>
       <div class="divider"></div>
       <p class="body-text">
-        Oh iya, kamu bisa buka pelan-pelan yah sambil lihat instruksinya 😉<br>
+        Oh iya, kamu bisa buka kotaknya pelan-pelan yah sambil lihat instruksinya 😉<br>
         Kamu siapp?
       </p>
 
@@ -451,12 +491,14 @@
       <p class="body-text">
         Di Malang sekarang lagi dingin yaa? Pasti dingin banget apalagi
         bentar lagi musim maba, hahaha.<br>
-        Dinginnya tuh ngga ketulungan, masa iya Malang dingin banget tapi
-        ngga ada yang ngasih jaket ke kamu, kan? Semoga dengan jaket ini
+        Dinginnya tuh ngga ketulungan, Masa iya Malang dingin banget tapi kamu ngga pakai jaket? 
+        Semoga dengan jaket ini
         bisa membantu menghangatkanmu 🥰 biar kamu tetap terjaga dan ngga
         kedinginan 🥶.<br>
-        Dipakai ya jaketnya biar tetap fit waktu kegiatan nanti pasti
-        dingin parahh.
+        Dipakai ya jaketnya biar tetap fit waktu kegiatan soalnya nanti pasti
+        dingin parahh. <br>
+        Semoga tiap kali kamu pakai atau
+        lihat ini, kamu ingat ada aku yang selalu mendoakanmu dari jauh.
       </p>
 
       <div class="gift-tag">
@@ -481,8 +523,8 @@
       <p class="body-text">
         Oiya, kebetulan kamu bakal sering berkegiatan di lapangan yaa,<br>
         kado ini juga bisa kamu pakai buat berkegiatan, semoga pas dan
-        cocok yaa. Menurutku sih pas dan cocok yah. Capek banget tauu
-        kegiatan di lapangan nantinyaa.
+        cocok yaa. Menurutku sih pas dan cocok yah. Seingatku dulu sih ukuran sepatumu 39, harusnya pas yah.
+        semoga nyaman nanti pas kamu pakai.
       </p>
 
       <div class="gift-tag">
@@ -492,7 +534,7 @@
 
       <div class="nav-row">
         <button class="btn btn-secondary btn-back prev-btn" aria-label="Kembali">←</button>
-        <button class="btn btn-primary next-btn">Ada lagi nihh ➡️</button>
+        <button class="btn btn-primary next-btn">Masih ada lagi nihh ➡️</button>
       </div>
     </div>
   </section>
@@ -506,9 +548,10 @@
       <h1 class="title" style="font-size:1.6rem;">Satu lagi nihh&hellip;</h1>
       <div class="divider"></div>
       <p class="body-text">
-        Kado yang ini aku pilih sambil kebayang wajahmu waktu buka
-        bungkusnya nanti, hehe. Semoga suka yaa, semoga juga kepakai
-        terus buat kegiatan sehari-harimu.<br>
+        Kamu masih sering pakai earphone kabel mu ya? 
+        Ini ada earphone bluetooth biar kamu ngga dijailin temenmu kalo pakek earphone kabel. 
+        Sengaja aku pilih gambar nailong karena kamu suka banget nailong hahaha, lucu tauu. 
+        Bisa kamu pakai buat dengerin musik biar moodmu kembali bagus hehe, aku masih sering putar playlistmu lohh.<br>
         Kecil sih bentuknya, tapi semoga artinya besar buatmu 🤍
       </p>
 
@@ -534,8 +577,7 @@
       <div class="divider"></div>
       <p class="body-text">
         Ini kado terakhir dari empat yang kusiapkan, tapi bukan berarti
-        rasa sayangku ada batasnya yaa. Semoga tiap kali kamu pakai atau
-        lihat ini, kamu ingat ada aku yang selalu mendoakanmu dari jauh.
+        rasa sayangku ada batasnya yaa. Ini bisa membantu meningkatkan imun tubuhmu biar tetap fit dikala banyak kegiatan menanti
       </p>
 
       <div class="gift-tag">
@@ -545,7 +587,7 @@
 
       <div class="nav-row">
         <button class="btn btn-secondary btn-back prev-btn" aria-label="Kembali">←</button>
-        <button class="btn btn-primary next-btn">Ada sedikit cerita lagi ➡️</button>
+        <button class="btn btn-primary next-btn">lanjut ya➡️</button>
       </div>
     </div>
   </section>
@@ -555,14 +597,15 @@
   <section class="page" data-page="7">
     <div class="card">
       <div class="progress-track"><div class="progress-fill"></div></div>
-      <p class="eyebrow">Sepenggal rasa · 1/4</p>
+      <p class="eyebrow">Ungkapan rasa· 1/4</p>
       <h1 class="title" style="font-size:1.6rem;">Sebelum lanjut&hellip;</h1>
       <div class="divider"></div>
       <p class="body-text">
-        Aku mau cerita sedikit sebelum surat ini berakhir. Dari semua
-        hal baik yang pernah terjadi di hidupku tahun ini, kamu ada di
-        urutan paling atas. Bukan karena kamu sempurna, tapi karena kamu
-        selalu berusaha ada, bahkan di hari-hari yang berat sekalipun.
+        Aku minta maaf yaa selama ini belum bisa jadi pasangan yang baik. 
+        Aku selalu berusaha jadi yang terbaik buat kamu. 
+        Yaa minggu2 ini terasa berat banget yah buat kamu. 
+        Aku berharapnya ini bukan kado terakhir buat kamu. 
+        Semoga apa yang kuberi ini bisa bermanfaat buat kamu.
       </p>
 
       <div class="nav-row">
@@ -575,14 +618,16 @@
   <section class="page" data-page="8">
     <div class="card">
       <div class="progress-track"><div class="progress-fill"></div></div>
-      <p class="eyebrow">Sepenggal rasa · 2/4</p>
+      <p class="eyebrow">Ungkapan rasa · 2/4</p>
       <h1 class="title" style="font-size:1.6rem;">Tentang kamu&hellip;</h1>
       <div class="divider"></div>
       <p class="body-text">
-        Kamu itu jenis orang yang bikin hal-hal kecil jadi terasa
-        berarti. Obrolan singkat kita di sela hari yang sibuk, candaan
-        receh yang cuma kita berdua yang paham, semuanya jadi alasan
-        aku selalu ingin cerita ke kamu duluan.
+        Aku amaze banget melihat kisah perjalananmu. 
+        Kamu bener bener wanita yang kuat, kamu bisa melewati semua ini sampai di titik ini. 
+        Hal hal yang kamu ceritakan bahkan sampai bikin aku bingung ga bisa berkata kata. 
+        Beruntungnya aku bisa dipertemukan sama kamu. 
+        Wanita hebat yang mampu mandiri, sosok yang kuat, ya meskipun kadang ngeluh dan kadang mood jadi buruk. 
+        Tapi aku salut kamu masih bisa bertahan sejauh ini. 
       </p>
 
       <div class="nav-row">
@@ -595,7 +640,7 @@
   <section class="page" data-page="9">
     <div class="card">
       <div class="progress-track"><div class="progress-fill"></div></div>
-      <p class="eyebrow">Sepenggal rasa · 3/4</p>
+      <p class="eyebrow">Ungkapan rasa · 3/4</p>
       <h1 class="title" style="font-size:1.6rem;">Tentang kita&hellip;</h1>
       <div class="divider"></div>
       <p class="body-text">
@@ -615,14 +660,14 @@
   <section class="page" data-page="10">
     <div class="card">
       <div class="progress-track"><div class="progress-fill"></div></div>
-      <p class="eyebrow">Sepenggal rasa · 4/4</p>
+      <p class="eyebrow">Ungkapan rasa · 4/4</p>
       <h1 class="title" style="font-size:1.6rem;">Terakhir, sebelum surat ini&hellip;</h1>
       <div class="divider"></div>
       <p class="body-text">
         Terima kasih sudah bertahan sejauh ini bersamaku, dan terima
         kasih sudah menemaniku sampai halaman terakhir dari kejutan
-        kecil ini. Satu halaman lagi, ya. Aku janji ini yang paling
-        aku tunggu untuk kamu baca 🤍
+        kecil ini🤍. <br>
+        The most wonderful gift is getting to know you.
       </p>
 
       <div class="nav-row">
@@ -637,10 +682,11 @@
     <div class="card">
       <div class="progress-track"><div class="progress-fill"></div></div>
       <p class="eyebrow">Sepucuk surat, untukmu</p>
+      From: December <br> To: July
       <h1 class="title" style="font-size:1.6rem;">Terima Kasih, Telah Ada</h1>
       <div class="divider"></div>
       <p class="body-text" style="text-align:left;">
-        Sayangku, di hari ulang tahunmu ini aku cuma mau bilang&mdash;
+        Hai, di hari ulang tahunmu ini aku cuma mau bilang&mdash;
         <span class="accent">aku bersyukur semesta mempertemukan kita.</span>
         Terima kasih untuk setiap tawa yang kamu bagi, setiap peluk
         yang menenangkan, dan setiap hari yang jadi lebih hangat
@@ -652,15 +698,20 @@
         selalu, semoga bahagia selalu, dan semoga aku masih boleh ada
         di setiap ceritamu ke depannya.
       </p>
-      <p class="signature">Dengan sepenuh hati, aku.</p>
+      <p class="body-text" style="text-align:left;">
+        Jika nantinya memang ada kesempatan, aku ingin terus belajar menjadi orang yang lebih baik. 
+        Untuk saat ini aku hanya bisa mendoakanmu dari jauh, semoga kamu selalu diberikan kemudahan dalam setiap langkahmu.
+        Kita punya jalan masing-masing, jika Allah SWT berkehendak, semoga jalan kita bisa bersinggungan lagi di masa depan.
+        Dipertemukan kembali setelah kita sama-sama menjadi versi terbaik dari diri kita sendiri.
+      </p>
+      <p class="signature">Dari pria yang sederhana.</p>
 
       <div class="divider"></div>
 
-      <p class="body-text" style="margin-bottom:10px;">Boleh balas suratku? Tulis apa saja yang kamu rasakan sekarang 🤍</p>
+      <p class="body-text" style="margin-bottom:10px;">Jika ada yang ingin kamu sampaikan...</p>
       <textarea class="reply-box" id="replyText" placeholder="Tulis balasanmu di sini..."></textarea>
 
-      <!-- ===== PHOTOBOOTH MISTERIUS ===== -->
-      <div class="photobooth">
+      <!-- <div class="photobooth">
         <p class="eyebrow" style="margin-bottom:8px;">Photobooth Misterius 📸</p>
         <p class="body-text" style="font-size:.85rem; margin-bottom:12px;">
           Yuk, abadikan ekspresimu sekarang juga. Fotonya akan ikut terkirim diam-diam bersama balasanmu.
@@ -686,7 +737,7 @@
           <button class="btn btn-secondary" id="camRetakeBtn">Ulangi 🔁</button>
         </div>
         <p class="cam-status" id="camStatus"></p>
-      </div>
+      </div> -->
 
       <div class="nav-row">
         <button class="btn btn-secondary btn-back prev-btn" aria-label="Kembali">←</button>
@@ -698,16 +749,6 @@
 </div>
 
 <script>
-/* =========================================================
-   0. KONFIGURASI EMAILJS (WAJIB DIISI SEBELUM DIPAKAI)
-   Daftar gratis di https://www.emailjs.com lalu buat:
-   - 1 Email Service   -> isi ke EMAILJS_SERVICE_ID
-   - 1 Email Template  -> isi ke EMAILJS_TEMPLATE_ID
-     Template harus punya variabel: {{message}} dan {{photo}}
-     Untuk {{photo}}, di template HTML EmailJS gunakan:
-     <img src="{{photo}}" style="max-width:100%;">
-   - Public Key (di menu Account) -> isi ke EMAILJS_PUBLIC_KEY
-========================================================= */
 const EMAILJS_PUBLIC_KEY  = 'GANTI_DENGAN_PUBLIC_KEY_KAMU';
 const EMAILJS_SERVICE_ID  = 'GANTI_DENGAN_SERVICE_ID_KAMU';
 const EMAILJS_TEMPLATE_ID = 'GANTI_DENGAN_TEMPLATE_ID_KAMU';
@@ -716,12 +757,6 @@ if (window.emailjs && EMAILJS_PUBLIC_KEY.indexOf('GANTI_') === -1) {
   emailjs.init(EMAILJS_PUBLIC_KEY);
 }
 
-/* =========================================================
-   1. NAVIGASI ANTAR HALAMAN (FADE TRANSITION + BACK/NEXT)
-   PAGE_ORDER menentukan urutan halaman untuk tombol back/next.
-   Kalau nanti mau menambah/mengurangi halaman, cukup ubah
-   array ini dan tambah/hapus <section data-page="..."> yang sesuai.
-========================================================= */
 const PAGE_ORDER = ['1','2','3','4','5','6','7','8','9','10','11'];
 
 function updateProgress(pageId){
@@ -763,9 +798,7 @@ document.querySelectorAll('.prev-btn').forEach(btn=>{
   btn.addEventListener('click', ()=> goRelative(-1));
 });
 
-/* =========================================================
-   2. SLIDESHOW FOTO OTOMATIS (HALAMAN 1)
-========================================================= */
+
 (function initSlideshow(){
   const imgs = document.querySelectorAll('#slideshow img');
   const dotsWrap = document.getElementById('slideDots');
@@ -789,12 +822,6 @@ document.querySelectorAll('.prev-btn').forEach(btn=>{
   }
 })();
 
-/* =========================================================
-   3. PLAYLIST MUSIK LATAR TERSEMBUNYI (AUTO-NEXT)
-   Taruh file lagu1.mp3 s/d lagu5.mp3 (bisa kurang dari 5)
-   sejajar dengan index.html. Musik mulai persis saat tombol
-   "Ada kejutan nih" diklik, lalu lanjut otomatis ke lagu berikutnya.
-========================================================= */
 const playlist = ['lagu1.mp3','lagu2.mp3','lagu3.mp3','lagu4.mp3','lagu5.mp3'];
 let songIndex = 0;
 const player = document.getElementById('bg-music');
@@ -809,14 +836,14 @@ player.addEventListener('ended', ()=>{
   playCurrentSong();
 });
 
-document.getElementById('startBtn').addEventListener('click', ()=>{
-  playCurrentSong();      // musik mulai tepat saat interaksi pertama
-  goRelative(1);
+document.getElementById("openLetter").addEventListener("click",()=>{
+    playCurrentSong();
+    goToPage("1");
 });
 
-/* =========================================================
-   4. PHOTOBOOTH MISTERIUS: AKSES KAMERA DEPAN + CAPTURE
-========================================================= */
+document.getElementById("startBtn").addEventListener("click",()=>{
+    goToPage("2");
+});
 let camStream = null;
 let capturedPhotoBase64 = null; // menyimpan hasil foto sebagai data URL base64
 
@@ -895,27 +922,21 @@ document.getElementById('camStartBtn').addEventListener('click', startCamera);
 document.getElementById('camShotBtn').addEventListener('click', takePhoto);
 document.getElementById('camRetakeBtn').addEventListener('click', retakePhoto);
 
-/* =========================================================
-   5. KIRIM BALASAN: EMAIL (LATAR BELAKANG) + WHATSAPP
-========================================================= */
 document.getElementById('sendWaBtn').addEventListener('click', ()=>{
   const pesan = document.getElementById('replyText').value.trim();
 
-  // --- 5a. Kirim pesan + foto (base64) ke email lewat EmailJS, berjalan diam-diam ---
   const emailSudahDikonfigurasi =
     window.emailjs && EMAILJS_PUBLIC_KEY.indexOf('GANTI_') === -1;
 
   if(emailSudahDikonfigurasi){
     emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
       message: pesan || '(Tidak menuliskan pesan teks)',
-      photo: capturedPhotoBase64 || '' // string kosong jika dia tidak memotret
+      photo: capturedPhotoBase64 || '' 
     }).catch(()=>{
-      // Gagal kirim email tidak menghentikan alur WhatsApp di bawah ini
+      alert('Gagal mengirim balasan via email. Pastikan konfigurasi EmailJS sudah benar.');
     });
   }
 
-  // --- 5b. Tetap buka WhatsApp seperti biasa, sebagai jalur cadangan ---
-  // GANTI NOMOR DI BAWAH INI dengan nomor WhatsApp tujuan (format: 62xxxxxxxxxx, tanpa "+")
   const nomorWA = '6281456103595';
 
   const teksAkhir = pesan
@@ -926,9 +947,6 @@ document.getElementById('sendWaBtn').addEventListener('click', ()=>{
   window.open(url, '_blank');
 });
 
-/* =========================================================
-   6. PARTIKEL LATAR: HATI & KELOPAK BUNGA BERGUGURAN
-========================================================= */
 (function initPetals(){
   const canvas = document.getElementById('petal-canvas');
   const ctx = canvas.getContext('2d');

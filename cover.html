@@ -1,0 +1,156 @@
+<!-- =========================================================================
+     COVER.HTML — Tempel blok ini menggantikan section cover lama:
+     <section class="page active fade-in" data-page="cover"> ... </section>
+
+     Letakkan <link> Google Fonts (Cormorant Garamond + Poppins) di <head>
+     jika belum ada — pada project kamu font ini SUDAH dimuat, jadi baris
+     link di bawah cukup dilewati / dihapus.
+     ========================================================================= -->
+
+<!-- Definisi SVG bersama (filter grain + simbol bunga) — taruh sekali saja,
+     boleh diletakkan tepat sebelum section cover -->
+<svg class="cv-defs" aria-hidden="true">
+  <filter id="cv-grain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" result="cvNoise"/>
+    <feColorMatrix in="cvNoise" type="matrix"
+      values="0 0 0 0 0
+              0 0 0 0 0
+              0 0 0 0 0
+              0 0 0 0.6 0"/>
+  </filter>
+
+  <symbol id="cv-flower" viewBox="0 0 40 40">
+    <g>
+      <ellipse cx="20" cy="11" rx="6" ry="10" fill="var(--cv-rose-gold)"/>
+      <ellipse cx="20" cy="11" rx="6" ry="10" fill="var(--cv-rose-gold)" transform="rotate(72 20 20)"/>
+      <ellipse cx="20" cy="11" rx="6" ry="10" fill="var(--cv-rose-gold)" transform="rotate(144 20 20)"/>
+      <ellipse cx="20" cy="11" rx="6" ry="10" fill="var(--cv-rose-gold)" transform="rotate(216 20 20)"/>
+      <ellipse cx="20" cy="11" rx="6" ry="10" fill="var(--cv-rose-gold)" transform="rotate(288 20 20)"/>
+      <circle cx="20" cy="20" r="3.6" fill="var(--cv-gold)"/>
+    </g>
+  </symbol>
+
+  <symbol id="cv-sprig" viewBox="0 0 60 20">
+    <path d="M2 10 Q30 -4 58 10" fill="none" stroke="var(--cv-rose-gold)" stroke-width="1" opacity="0.6"/>
+    <use href="#cv-flower" x="20" y="0" width="14" height="14"/>
+    <use href="#cv-flower" x="38" y="4" width="10" height="10"/>
+  </symbol>
+</svg>
+
+<section class="page active fade-in" data-page="cover">
+  <div class="cover-scene" id="coverScene">
+
+    <!-- Canvas ambient: bokeh, sparkle, kelopak melayang (digambar via JS, bukan gambar statis) -->
+    <canvas class="cover-scene__bg" id="coverBgCanvas" aria-hidden="true"></canvas>
+
+    <!-- Glow lembut saat surat terbuka -->
+    <div class="cover-scene__glow" aria-hidden="true"></div>
+
+    <!-- Grain sangat tipis -->
+    <div class="cover-scene__grain" aria-hidden="true"></div>
+
+    <div class="cover-scene__content">
+      <p class="cover-scene__eyebrow">Untuk</p>
+      <h2 class="cover-scene__name">Icha Sabillah Anjani <span aria-hidden="true">🤍</span></h2>
+
+      <svg class="cover-scene__ornament" viewBox="0 0 40 40" aria-hidden="true">
+        <use href="#cv-flower"/>
+      </svg>
+
+      <!-- ================= AMPLOP ================= -->
+      <div class="envelope"
+           id="envelope"
+           tabindex="0"
+           role="button"
+           aria-label="Buka surat ucapan untuk Icha Sabillah Anjani"
+           aria-describedby="coverHint">
+
+        <!-- Badan belakang amplop -->
+        <svg class="envelope__back" viewBox="0 0 320 220" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="cvPaperGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--cv-cream)"/>
+              <stop offset="100%" stop-color="var(--cv-bg)"/>
+            </linearGradient>
+          </defs>
+          <rect x="4" y="4" width="312" height="212" rx="12" fill="url(#cvPaperGrad)"
+                stroke="var(--cv-gold)" stroke-width="1"/>
+          <!-- emboss halus: garis lipatan interior -->
+          <path d="M6 6 L160 112 L314 6" fill="none" stroke="var(--cv-rose-gold)" stroke-opacity="0.3" stroke-width="1"/>
+          <path d="M6 214 L160 112 L314 214" fill="none" stroke="var(--cv-rose-gold)" stroke-opacity="0.22" stroke-width="1"/>
+          <rect x="4" y="4" width="312" height="212" rx="12" fill="none" stroke="#fff" stroke-opacity="0.4" stroke-width="0.6"/>
+        </svg>
+
+        <!-- Surat di dalam amplop -->
+        <svg class="envelope__letter" viewBox="0 0 260 170" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <defs>
+            <linearGradient id="cvLetterGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#fffdfb"/>
+              <stop offset="100%" stop-color="var(--cv-cream)"/>
+            </linearGradient>
+          </defs>
+          <rect x="3" y="3" width="254" height="164" rx="7" fill="url(#cvLetterGrad)"
+                stroke="var(--cv-gold)" stroke-width="1"/>
+          <rect x="13" y="13" width="234" height="144" rx="3" fill="none"
+                stroke="var(--cv-rose-gold)" stroke-width="0.75" stroke-dasharray="2 3" opacity="0.55"/>
+
+          <use href="#cv-flower" x="112" y="20" width="36" height="36" opacity="0.9"/>
+
+          <text x="130" y="86" text-anchor="middle" class="envelope__letter-eyebrow">Untuk</text>
+          <text x="130" y="110" text-anchor="middle" class="envelope__letter-name">Icha Sabillah Anjani</text>
+          <text x="130" y="134" text-anchor="middle" class="envelope__letter-heart">🤍</text>
+
+          <use href="#cv-sprig" x="90" y="142" width="80" height="18" opacity="0.8"/>
+        </svg>
+
+        <!-- Kantong depan amplop (menutupi bagian bawah surat) -->
+        <svg class="envelope__pocket" viewBox="0 0 320 220" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="cvPocketGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--cv-cream)"/>
+              <stop offset="100%" stop-color="#f7ece6"/>
+            </linearGradient>
+          </defs>
+          <path d="M4 216 L4 92 L160 176 L316 92 L316 216 Z"
+                fill="url(#cvPocketGrad)" stroke="var(--cv-gold)" stroke-width="1"/>
+          <path d="M4 92 L160 176 L316 92" fill="none" stroke="#fff" stroke-opacity="0.5" stroke-width="0.6"/>
+        </svg>
+
+        <!-- Tutup amplop (flap) yang membuka -->
+        <svg class="envelope__flap" viewBox="0 0 320 220" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="cvFlapGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#fffdfb"/>
+              <stop offset="100%" stop-color="var(--cv-cream)"/>
+            </linearGradient>
+          </defs>
+          <path d="M4 4 L316 4 L160 118 Z" fill="url(#cvFlapGrad)" stroke="var(--cv-gold)" stroke-width="1"/>
+          <path d="M40 22 Q160 66 280 22" fill="none" stroke="var(--cv-rose-gold)" stroke-width="1" opacity="0.45"/>
+          <use href="#cv-flower" x="146" y="8" width="28" height="28" opacity="0.85"/>
+        </svg>
+
+        <!-- Cap lilin -->
+        <div class="envelope__seal" id="envelopeSeal" aria-hidden="true">
+          <svg viewBox="0 0 100 100">
+            <defs>
+              <radialGradient id="cvSealGrad" cx="35%" cy="30%" r="75%">
+                <stop offset="0%" stop-color="#9c4657"/>
+                <stop offset="55%" stop-color="var(--cv-maroon)"/>
+                <stop offset="100%" stop-color="#5e1f29"/>
+              </radialGradient>
+            </defs>
+            <circle cx="50" cy="50" r="42" fill="url(#cvSealGrad)"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="#4a1620" stroke-width="1" opacity="0.5"/>
+            <path d="M13 45 q-5 11 2 17 q7 4 9 -4" fill="var(--cv-maroon)" opacity="0.9"/>
+            <path d="M87 51 q6 10 -1 17 q-7 5 -10 -3" fill="var(--cv-maroon)" opacity="0.9"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="#fff" stroke-opacity="0.25" stroke-width="1"/>
+            <text x="50" y="61" text-anchor="middle" class="envelope__seal-letter">I</text>
+          </svg>
+        </div>
+      </div>
+      <!-- ================= /AMPLOP ================= -->
+
+      <p class="cover-scene__hint" id="coverHint">Sentuh cap lilin untuk membuka surat.</p>
+    </div>
+  </div>
+</section>
