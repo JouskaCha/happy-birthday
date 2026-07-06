@@ -129,7 +129,7 @@
           <use href="#cv-flower" x="146" y="8" width="28" height="28" opacity="0.85"/>
         </svg>
 
-        <!-- Cap lilin -->
+        <!-- Cap lilin: dua belahan agar bisa "pecah terbuka" saat diklik -->
         <div class="envelope__seal" id="envelopeSeal" aria-hidden="true">
           <svg viewBox="0 0 100 100">
             <defs>
@@ -138,12 +138,28 @@
                 <stop offset="55%" stop-color="var(--cv-maroon)"/>
                 <stop offset="100%" stop-color="#5e1f29"/>
               </radialGradient>
+              <clipPath id="cvSealClipLeft">
+                <rect x="0" y="0" width="50" height="100"/>
+              </clipPath>
+              <clipPath id="cvSealClipRight">
+                <rect x="50" y="0" width="50" height="100"/>
+              </clipPath>
             </defs>
-            <circle cx="50" cy="50" r="42" fill="url(#cvSealGrad)"/>
-            <circle cx="50" cy="50" r="42" fill="none" stroke="#4a1620" stroke-width="1" opacity="0.5"/>
-            <path d="M13 45 q-5 11 2 17 q7 4 9 -4" fill="var(--cv-maroon)" opacity="0.9"/>
-            <path d="M87 51 q6 10 -1 17 q-7 5 -10 -3" fill="var(--cv-maroon)" opacity="0.9"/>
-            <circle cx="50" cy="50" r="42" fill="none" stroke="#fff" stroke-opacity="0.25" stroke-width="1"/>
+
+            <g class="envelope__seal-half envelope__seal-half--left" clip-path="url(#cvSealClipLeft)">
+              <circle cx="50" cy="50" r="42" fill="url(#cvSealGrad)"/>
+              <circle cx="50" cy="50" r="42" fill="none" stroke="#4a1620" stroke-width="1" opacity="0.5"/>
+              <path d="M13 45 q-5 11 2 17 q7 4 9 -4" fill="var(--cv-maroon)" opacity="0.9"/>
+              <circle cx="50" cy="50" r="42" fill="none" stroke="#fff" stroke-opacity="0.25" stroke-width="1"/>
+            </g>
+
+            <g class="envelope__seal-half envelope__seal-half--right" clip-path="url(#cvSealClipRight)">
+              <circle cx="50" cy="50" r="42" fill="url(#cvSealGrad)"/>
+              <circle cx="50" cy="50" r="42" fill="none" stroke="#4a1620" stroke-width="1" opacity="0.5"/>
+              <path d="M87 51 q6 10 -1 17 q-7 5 -10 -3" fill="var(--cv-maroon)" opacity="0.9"/>
+              <circle cx="50" cy="50" r="42" fill="none" stroke="#fff" stroke-opacity="0.25" stroke-width="1"/>
+            </g>
+
             <text x="50" y="61" text-anchor="middle" class="envelope__seal-letter">I</text>
           </svg>
         </div>

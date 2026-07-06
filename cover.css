@@ -174,6 +174,10 @@
 .cover-scene--open .envelope{
   animation: none;
 }
+.envelope--opened{
+  pointer-events: none;
+  cursor: default;
+}
 
 @keyframes cv-float{
   0%, 100%{ transform: translateY(0); }
@@ -196,10 +200,11 @@
 
 .envelope__letter{
   z-index: 2;
-  transform: translateY(14px) scale(0.9);
+  transform: translateY(6%) scale(0.9);
   opacity: 0.98;
   transform-origin: 50% 100%;
   transition: transform 1s cubic-bezier(.22,.9,.32,1), opacity .4s ease;
+  will-change: transform;
 }
 
 .envelope__pocket{ z-index: 3; }
@@ -209,6 +214,7 @@
   transform-origin: 50% 0%;
   transform-style: preserve-3d;
   transition: transform 0.9s cubic-bezier(.45,0,.2,1);
+  will-change: transform;
 }
 
 /* Cap lilin */
@@ -220,7 +226,7 @@
   aspect-ratio: 1/1;
   transform: translate(-50%, -50%);
   z-index: 5;
-  transition: transform 0.25s ease, opacity 0.5s ease;
+  transition: transform 0.25s ease, opacity 0.4s ease 0.5s;
   filter: drop-shadow(0 3px 5px rgba(74, 22, 32, 0.45));
 }
 .envelope:hover .envelope__seal{
@@ -228,10 +234,33 @@
 }
 .envelope__seal--pressed{
   transform: translate(-50%, -50%) scale(0.86) !important;
+  transition: transform 0.15s ease;
 }
 .envelope__seal--opened{
   opacity: 0;
-  transform: translate(-50%, -50%) scale(1.5) rotate(12deg) !important;
+  pointer-events: none;
+}
+
+/* Dua belahan cap lilin yang terpisah saat dibuka (bukan sekadar fade) */
+.envelope__seal-half{
+  transform-box: fill-box;
+  transition: transform 0.55s cubic-bezier(.34,1.15,.4,1), opacity 0.55s ease;
+  will-change: transform, opacity;
+}
+.envelope__seal-half--left{ transform-origin: 30% 55%; }
+.envelope__seal-half--right{ transform-origin: 70% 55%; }
+
+.envelope__seal--opened .envelope__seal-half--left{
+  transform: translate(-9px, -6px) rotate(-24deg);
+  opacity: 0;
+}
+.envelope__seal--opened .envelope__seal-half--right{
+  transform: translate(9px, -7px) rotate(26deg);
+  opacity: 0;
+}
+.envelope__seal--opened .envelope__seal-letter{
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 /* Saat amplop terbuka: flap terangkat ke belakang */
@@ -242,7 +271,7 @@
 /* Surat naik, sedikit membesar, dan pindah ke atas susunan lapisan */
 .cover-scene--rising .envelope__letter{
   z-index: 6;
-  transform: translateY(-180px) scale(1.08);
+  transform: translateY(-92%) scale(1.08);
   opacity: 1;
 }
 
@@ -281,9 +310,6 @@
    ------------------------------------------------------------------------- */
 @media (max-width: 420px){
   .cover-scene__content{ gap: 10px; padding: 24px 16px; }
-  .cover-scene--rising .envelope__letter{
-    transform: translateY(-130px) scale(1.05);
-  }
 }
 
 @media (min-width: 900px){

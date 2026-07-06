@@ -180,8 +180,11 @@
   }
 
   window.addEventListener('resize', function(){
-    resize();
-    seedParticles();
+    clearTimeout(window.__cvResizeTimer);
+    window.__cvResizeTimer = setTimeout(function(){
+      resize();
+      seedParticles();
+    }, 150);
   });
 
   /* =======================================================================
@@ -204,9 +207,21 @@
     hasOpened = true;
 
     envelope.setAttribute('aria-disabled', 'true');
+    envelope.classList.add('envelope--opened');
+    envelope.tabIndex = -1;
 
-    // Mulai musik SEGERA (dalam gesture klik/keydown) demi kebijakan autoplay browser
-    window.playCurrentSong();
+    // Getaran halus di perangkat yang mendukung (progressive enhancement, aman jika tidak ada)
+    if(navigator.vibrate){
+      try{ navigator.vibrate(12); }catch(e){ /* diabaikan */ }
+    }
+
+    // Mulai musik SEGERA (dalam gesture klik/keydown) demi kebijakan autoplay browser.
+    // Dibungkus try/catch supaya kegagalan musik tidak menghentikan animasi visual amplop.
+    try{
+      window.playCurrentSong();
+    }catch(e){
+      console.warn('[cover] playCurrentSong gagal, animasi tetap lanjut:', e);
+    }
 
     var fastForward = prefersReducedMotion;
     var t = fastForward ? {

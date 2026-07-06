@@ -404,6 +404,307 @@
     .card{ padding:26px 18px 24px; }
     h1.title{ font-size:1.7rem; }
   }
+
+  /* =====================================================================
+     ============ COVER AMPLOP PREMIUM (ditambahkan) ====================
+     ===================================================================== */
+
+  /* --- Variabel warna & font, di-scope ke .cover-scene --- */
+  .cover-scene{
+    --cv-bg:        #FDF8F5;
+    --cv-cream:     #FFFDFB;
+    --cv-rose-gold: #C98A94;
+    --cv-maroon:    #7A2E3A;
+    --cv-gold:      #D9B48F;
+    --cv-text:      #3D2B2E;
+    --cv-font-serif: 'Cormorant Garamond', serif;
+    --cv-font-sans:  'Poppins', sans-serif;
+  }
+
+  .cv-defs{
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .cover-scene{
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(160deg, var(--cv-bg) 0%, #fbeeec 55%, var(--cv-bg) 100%);
+    isolation: isolate;
+    transition: opacity 0.9s ease, filter 0.9s ease;
+  }
+
+  .cover-scene--fade-out{
+    opacity: 0;
+    filter: blur(6px);
+    pointer-events: none;
+  }
+
+  .cover-scene__bg{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    transition: filter 1.1s ease;
+  }
+
+  .cover-scene--blur .cover-scene__bg{
+    filter: blur(3px) saturate(1.05);
+  }
+
+  .cover-scene__grain{
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    background: #000;
+    filter: url(#cv-grain);
+    opacity: 0.045;
+    mix-blend-mode: overlay;
+  }
+
+  .cover-scene__glow{
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(circle at 50% 42%,
+      rgba(255, 246, 235, 0.85) 0%,
+      rgba(217, 180, 143, 0.35) 35%,
+      rgba(217, 180, 143, 0) 70%);
+    transition: opacity 1.2s ease;
+  }
+  .cover-scene--glow .cover-scene__glow{
+    opacity: 1;
+  }
+
+  .cover-scene__content{
+    position: relative;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 32px 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 460px;
+  }
+
+  .cover-scene__eyebrow{
+    font-family: var(--cv-font-sans);
+    font-size: 0.7rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--cv-maroon);
+    opacity: 0.85;
+    margin: 0;
+  }
+
+  .cover-scene__name{
+    font-family: var(--cv-font-serif);
+    font-style: italic;
+    font-weight: 600;
+    font-size: clamp(1.4rem, 6vw, 2rem);
+    color: var(--cv-maroon);
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .cover-scene__ornament{
+    width: 34px;
+    height: 34px;
+    color: var(--cv-rose-gold);
+    opacity: 0.9;
+    margin: 2px 0 4px;
+  }
+
+  .cover-scene__hint{
+    font-family: var(--cv-font-sans);
+    font-size: 0.82rem;
+    color: var(--cv-text);
+    opacity: 0.7;
+    margin: 10px 0 0;
+    transition: opacity 0.6s ease;
+  }
+  .cover-scene--open .cover-scene__hint{
+    opacity: 0;
+  }
+
+  .envelope{
+    position: relative;
+    width: min(78vw, 320px);
+    aspect-ratio: 320 / 220;
+    perspective: 1400px;
+    cursor: pointer;
+    outline: none;
+    filter: drop-shadow(0 22px 34px rgba(122, 46, 58, 0.28));
+    transition: transform 0.4s ease, filter 0.4s ease;
+    animation: cv-float 4.5s ease-in-out infinite;
+  }
+  .envelope:hover{
+    transform: translateY(-4px);
+    filter: drop-shadow(0 26px 40px rgba(122, 46, 58, 0.34));
+  }
+  .envelope:focus-visible{
+    filter: drop-shadow(0 0 0 3px rgba(217,180,143,0.6)) drop-shadow(0 22px 34px rgba(122, 46, 58, 0.28));
+  }
+  .cover-scene--open .envelope{
+    animation: none;
+  }
+  .envelope--opened{
+    pointer-events: none;
+    cursor: default;
+  }
+
+  @keyframes cv-float{
+    0%, 100%{ transform: translateY(0); }
+    50%{ transform: translateY(-6px); }
+  }
+
+  .envelope__back,
+  .envelope__pocket,
+  .envelope__flap,
+  .envelope__letter{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .envelope__back{ z-index: 1; }
+
+  .envelope__letter{
+    z-index: 2;
+    transform: translateY(6%) scale(0.9);
+    opacity: 0.98;
+    transform-origin: 50% 100%;
+    transition: transform 1s cubic-bezier(.22,.9,.32,1), opacity .4s ease;
+    will-change: transform;
+  }
+
+  .envelope__pocket{ z-index: 3; }
+
+  .envelope__flap{
+    z-index: 4;
+    transform-origin: 50% 0%;
+    transform-style: preserve-3d;
+    transition: transform 0.9s cubic-bezier(.45,0,.2,1);
+    will-change: transform;
+  }
+
+  .envelope__seal{
+    position: absolute;
+    top: 46%;
+    left: 50%;
+    width: 21%;
+    aspect-ratio: 1/1;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    transition: transform 0.25s ease, opacity 0.4s ease 0.5s;
+    filter: drop-shadow(0 3px 5px rgba(74, 22, 32, 0.45));
+  }
+  .envelope:hover .envelope__seal{
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+  .envelope__seal--pressed{
+    transform: translate(-50%, -50%) scale(0.86) !important;
+    transition: transform 0.15s ease;
+  }
+  .envelope__seal--opened{
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Dua belahan cap lilin yang terpisah saat dibuka (bukan sekadar fade) */
+  .envelope__seal-half{
+    transform-box: fill-box;
+    transition: transform 0.55s cubic-bezier(.34,1.15,.4,1), opacity 0.55s ease;
+    will-change: transform, opacity;
+  }
+  .envelope__seal-half--left{ transform-origin: 30% 55%; }
+  .envelope__seal-half--right{ transform-origin: 70% 55%; }
+
+  .envelope__seal--opened .envelope__seal-half--left{
+    transform: translate(-9px, -6px) rotate(-24deg);
+    opacity: 0;
+  }
+  .envelope__seal--opened .envelope__seal-half--right{
+    transform: translate(9px, -7px) rotate(26deg);
+    opacity: 0;
+  }
+  .envelope__seal--opened .envelope__seal-letter{
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .cover-scene--open .envelope__flap{
+    transform: rotateX(-172deg);
+  }
+
+  .cover-scene--rising .envelope__letter{
+    z-index: 6;
+    transform: translateY(-92%) scale(1.08);
+    opacity: 1;
+  }
+
+  .envelope__letter-eyebrow{
+    font-family: var(--cv-font-sans);
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    fill: var(--cv-rose-gold);
+  }
+  .envelope__letter-name{
+    font-family: var(--cv-font-serif);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 18px;
+    fill: var(--cv-maroon);
+  }
+  .envelope__letter-heart{
+    font-size: 13px;
+    fill: var(--cv-maroon);
+  }
+
+  .envelope__seal-letter{
+    font-family: var(--cv-font-serif);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 30px;
+    fill: var(--cv-gold);
+  }
+
+  @media (max-width: 420px){
+    .cover-scene__content{ gap: 10px; padding: 24px 16px; }
+  }
+
+  @media (min-width: 900px){
+    .envelope{ width: min(30vw, 340px); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .envelope{ animation: none; }
+    .cover-scene,
+    .cover-scene__bg,
+    .cover-scene__glow,
+    .envelope__flap,
+    .envelope__letter,
+    .envelope__seal{
+      transition-duration: 0.25s !important;
+      animation-duration: 0.01s !important;
+    }
+  }
 </style>
 </head>
 <body>
@@ -416,15 +717,167 @@
 
 <div id="stage">
 
+  <!-- Definisi SVG bersama (filter grain + simbol bunga) -->
+  <svg class="cv-defs" aria-hidden="true">
+    <filter id="cv-grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" result="cvNoise"/>
+      <feColorMatrix in="cvNoise" type="matrix"
+        values="0 0 0 0 0
+                0 0 0 0 0
+                0 0 0 0 0
+                0 0 0 0.6 0"/>
+    </filter>
+
+    <symbol id="cv-flower" viewBox="0 0 40 40">
+      <g>
+        <ellipse cx="20" cy="11" rx="6" ry="10" fill="var(--cv-rose-gold)"/>
+        <ellipse cx="20" cy="11" rx="6" ry="10" fill="var(--cv-rose-gold)" transform="rotate(72 20 20)"/>
+        <ellipse cx="20" cy="11" rx="6" ry="10" fill="var(--cv-rose-gold)" transform="rotate(144 20 20)"/>
+        <ellipse cx="20" cy="11" rx="6" ry="10" fill="var(--cv-rose-gold)" transform="rotate(216 20 20)"/>
+        <ellipse cx="20" cy="11" rx="6" ry="10" fill="var(--cv-rose-gold)" transform="rotate(288 20 20)"/>
+        <circle cx="20" cy="20" r="3.6" fill="var(--cv-gold)"/>
+      </g>
+    </symbol>
+
+    <symbol id="cv-sprig" viewBox="0 0 60 20">
+      <path d="M2 10 Q30 -4 58 10" fill="none" stroke="var(--cv-rose-gold)" stroke-width="1" opacity="0.6"/>
+      <use href="#cv-flower" x="20" y="0" width="14" height="14"/>
+      <use href="#cv-flower" x="38" y="4" width="10" height="10"/>
+    </symbol>
+  </svg>
+
   <section class="page active fade-in" data-page="cover">
-    <div class="cover-page">
-        <div class="letter-wrapper" id="openLetter">
-            <img src="surat.png" class="letter-image">
-            <h2>Untuk Icha Sabillah Anjani 🤍</h2>
-            <p>Sentuh surat ini untuk membukanya</p>
+    <div class="cover-scene" id="coverScene">
+
+      <!-- Canvas ambient: bokeh, sparkle, kelopak melayang -->
+      <canvas class="cover-scene__bg" id="coverBgCanvas" aria-hidden="true"></canvas>
+
+      <!-- Glow lembut saat surat terbuka -->
+      <div class="cover-scene__glow" aria-hidden="true"></div>
+
+      <!-- Grain sangat tipis -->
+      <div class="cover-scene__grain" aria-hidden="true"></div>
+
+      <div class="cover-scene__content">
+        <p class="cover-scene__eyebrow">Untuk</p>
+        <h2 class="cover-scene__name">Icha Sabillah Anjani <span aria-hidden="true">🤍</span></h2>
+
+        <svg class="cover-scene__ornament" viewBox="0 0 40 40" aria-hidden="true">
+          <use href="#cv-flower"/>
+        </svg>
+
+        <!-- ================= AMPLOP ================= -->
+        <div class="envelope"
+             id="envelope"
+             tabindex="0"
+             role="button"
+             aria-label="Buka surat ucapan untuk Icha Sabillah Anjani"
+             aria-describedby="coverHint">
+
+          <!-- Badan belakang amplop -->
+          <svg class="envelope__back" viewBox="0 0 320 220" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="cvPaperGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="var(--cv-cream)"/>
+                <stop offset="100%" stop-color="var(--cv-bg)"/>
+              </linearGradient>
+            </defs>
+            <rect x="4" y="4" width="312" height="212" rx="12" fill="url(#cvPaperGrad)"
+                  stroke="var(--cv-gold)" stroke-width="1"/>
+            <path d="M6 6 L160 112 L314 6" fill="none" stroke="var(--cv-rose-gold)" stroke-opacity="0.3" stroke-width="1"/>
+            <path d="M6 214 L160 112 L314 214" fill="none" stroke="var(--cv-rose-gold)" stroke-opacity="0.22" stroke-width="1"/>
+            <rect x="4" y="4" width="312" height="212" rx="12" fill="none" stroke="#fff" stroke-opacity="0.4" stroke-width="0.6"/>
+          </svg>
+
+          <!-- Surat di dalam amplop -->
+          <svg class="envelope__letter" viewBox="0 0 260 170" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <defs>
+              <linearGradient id="cvLetterGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fffdfb"/>
+                <stop offset="100%" stop-color="var(--cv-cream)"/>
+              </linearGradient>
+            </defs>
+            <rect x="3" y="3" width="254" height="164" rx="7" fill="url(#cvLetterGrad)"
+                  stroke="var(--cv-gold)" stroke-width="1"/>
+            <rect x="13" y="13" width="234" height="144" rx="3" fill="none"
+                  stroke="var(--cv-rose-gold)" stroke-width="0.75" stroke-dasharray="2 3" opacity="0.55"/>
+
+            <use href="#cv-flower" x="112" y="20" width="36" height="36" opacity="0.9"/>
+
+            <text x="130" y="86" text-anchor="middle" class="envelope__letter-eyebrow">Untuk</text>
+            <text x="130" y="110" text-anchor="middle" class="envelope__letter-name">Icha Sabillah Anjani</text>
+            <text x="130" y="134" text-anchor="middle" class="envelope__letter-heart">🤍</text>
+
+            <use href="#cv-sprig" x="90" y="142" width="80" height="18" opacity="0.8"/>
+          </svg>
+
+          <!-- Kantong depan amplop -->
+          <svg class="envelope__pocket" viewBox="0 0 320 220" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="cvPocketGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="var(--cv-cream)"/>
+                <stop offset="100%" stop-color="#f7ece6"/>
+              </linearGradient>
+            </defs>
+            <path d="M4 216 L4 92 L160 176 L316 92 L316 216 Z"
+                  fill="url(#cvPocketGrad)" stroke="var(--cv-gold)" stroke-width="1"/>
+            <path d="M4 92 L160 176 L316 92" fill="none" stroke="#fff" stroke-opacity="0.5" stroke-width="0.6"/>
+          </svg>
+
+          <!-- Tutup amplop (flap) yang membuka -->
+          <svg class="envelope__flap" viewBox="0 0 320 220" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="cvFlapGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fffdfb"/>
+                <stop offset="100%" stop-color="var(--cv-cream)"/>
+              </linearGradient>
+            </defs>
+            <path d="M4 4 L316 4 L160 118 Z" fill="url(#cvFlapGrad)" stroke="var(--cv-gold)" stroke-width="1"/>
+            <path d="M40 22 Q160 66 280 22" fill="none" stroke="var(--cv-rose-gold)" stroke-width="1" opacity="0.45"/>
+            <use href="#cv-flower" x="146" y="8" width="28" height="28" opacity="0.85"/>
+          </svg>
+
+          <!-- Cap lilin: dua belahan agar bisa "pecah terbuka" saat diklik -->
+          <div class="envelope__seal" id="envelopeSeal" aria-hidden="true">
+            <svg viewBox="0 0 100 100">
+              <defs>
+                <radialGradient id="cvSealGrad" cx="35%" cy="30%" r="75%">
+                  <stop offset="0%" stop-color="#9c4657"/>
+                  <stop offset="55%" stop-color="var(--cv-maroon)"/>
+                  <stop offset="100%" stop-color="#5e1f29"/>
+                </radialGradient>
+                <clipPath id="cvSealClipLeft">
+                  <rect x="0" y="0" width="50" height="100"/>
+                </clipPath>
+                <clipPath id="cvSealClipRight">
+                  <rect x="50" y="0" width="50" height="100"/>
+                </clipPath>
+              </defs>
+
+              <g class="envelope__seal-half envelope__seal-half--left" clip-path="url(#cvSealClipLeft)">
+                <circle cx="50" cy="50" r="42" fill="url(#cvSealGrad)"/>
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#4a1620" stroke-width="1" opacity="0.5"/>
+                <path d="M13 45 q-5 11 2 17 q7 4 9 -4" fill="var(--cv-maroon)" opacity="0.9"/>
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#fff" stroke-opacity="0.25" stroke-width="1"/>
+              </g>
+
+              <g class="envelope__seal-half envelope__seal-half--right" clip-path="url(#cvSealClipRight)">
+                <circle cx="50" cy="50" r="42" fill="url(#cvSealGrad)"/>
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#4a1620" stroke-width="1" opacity="0.5"/>
+                <path d="M87 51 q6 10 -1 17 q-7 5 -10 -3" fill="var(--cv-maroon)" opacity="0.9"/>
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#fff" stroke-opacity="0.25" stroke-width="1"/>
+              </g>
+
+              <text x="50" y="61" text-anchor="middle" class="envelope__seal-letter">I</text>
+            </svg>
+          </div>
         </div>
+        <!-- ================= /AMPLOP ================= -->
+
+        <p class="cover-scene__hint" id="coverHint">Sentuh cap lilin untuk membuka surat.</p>
+      </div>
     </div>
-</section>
+  </section>
 
   <section class="page fade-in" data-page="1">
     <div class="card">
@@ -455,6 +908,8 @@
         <img src="foto1.jpg" alt="Kenangan 1" class="show">
         <img src="foto2.jpg" alt="Kenangan 2">
         <img src="foto3.jpg" alt="Kenangan 3">
+        <img src="foto4.jpg" alt="Kenangan 4">
+        <img src="foto5.jpg" alt="Kenangan 5">
         <div class="slide-dots" id="slideDots"></div>
       </div>
 
@@ -694,14 +1149,14 @@
       </p>
       <p class="body-text" style="text-align:left;">
         Semoga di usia barumu ini, kamu selalu dikelilingi orang-orang
-        yang menyayangimu setulus kamu menyayangi mereka. Semoga sehat
-        selalu, semoga bahagia selalu, dan semoga aku masih boleh ada
+        yang menyayangimu setulus kamu menyayangi mereka. Dikelilingi oleh teman2 yang baik. 
+        Semoga sehat selalu, semoga bahagia selalu, dan semoga aku masih boleh ada
         di setiap ceritamu ke depannya.
       </p>
       <p class="body-text" style="text-align:left;">
         Jika nantinya memang ada kesempatan, aku ingin terus belajar menjadi orang yang lebih baik. 
         Untuk saat ini aku hanya bisa mendoakanmu dari jauh, semoga kamu selalu diberikan kemudahan dalam setiap langkahmu.
-        Kita punya jalan masing-masing, jika Allah SWT berkehendak, semoga jalan kita bisa bersinggungan lagi di masa depan.
+        Kita punya jalan masing-masing, jika <strong> Allah SWT</strong> berkehendak, semoga jalan kita bisa bersinggungan lagi di masa depan.
         Dipertemukan kembali setelah kita sama-sama menjadi versi terbaik dari diri kita sendiri.
       </p>
       <p class="signature">Dari pria yang sederhana.</p>
@@ -741,7 +1196,7 @@
 
       <div class="nav-row">
         <button class="btn btn-secondary btn-back prev-btn" aria-label="Kembali">←</button>
-        <button class="btn btn-whatsapp" id="sendWaBtn">Kirim Balasan ke WhatsApp 💬</button>
+        <button class="btn btn-whatsapp" id="sendWaBtn">Kirim Balasan</button>
       </div>
     </div>
   </section>
@@ -828,17 +1283,17 @@ const player = document.getElementById('bg-music');
 
 function playCurrentSong(){
   player.src = playlist[songIndex];
-  player.play().catch(()=>{ /* diabaikan jika file belum tersedia */ });
+  var playPromise = player.play();
+  // Beberapa browser/engine lawas tidak mengembalikan Promise dari play() —
+  // cek dulu sebelum memanggil .catch() supaya tidak melempar error.
+  if(playPromise && typeof playPromise.catch === 'function'){
+    playPromise.catch(()=>{ /* diabaikan jika file belum tersedia / diblokir browser */ });
+  }
 }
 
 player.addEventListener('ended', ()=>{
   songIndex = (songIndex + 1) % playlist.length;
   playCurrentSong();
-});
-
-document.getElementById("openLetter").addEventListener("click",()=>{
-    playCurrentSong();
-    goToPage("1");
 });
 
 document.getElementById("startBtn").addEventListener("click",()=>{
@@ -918,9 +1373,14 @@ function retakePhoto(){
   startCamera();
 }
 
-document.getElementById('camStartBtn').addEventListener('click', startCamera);
-document.getElementById('camShotBtn').addEventListener('click', takePhoto);
-document.getElementById('camRetakeBtn').addEventListener('click', retakePhoto);
+var camStartBtnEl = document.getElementById('camStartBtn');
+if (camStartBtnEl) camStartBtnEl.addEventListener('click', startCamera);
+
+var camShotBtnEl = document.getElementById('camShotBtn');
+if (camShotBtnEl) camShotBtnEl.addEventListener('click', takePhoto);
+
+var camRetakeBtnEl = document.getElementById('camRetakeBtn');
+if (camRetakeBtnEl) camRetakeBtnEl.addEventListener('click', retakePhoto);
 
 document.getElementById('sendWaBtn').addEventListener('click', ()=>{
   const pesan = document.getElementById('replyText').value.trim();
@@ -1028,6 +1488,267 @@ document.getElementById('sendWaBtn').addEventListener('click', ()=>{
     requestAnimationFrame(tick);
   }
   tick();
+})();
+
+/* =====================================================================
+   =============== COVER AMPLOP PREMIUM — ORKESTRASI (ditambahkan) =====
+   ===================================================================== */
+(function initCover(){
+  'use strict';
+
+  var scene    = document.getElementById('coverScene');
+  var canvas   = document.getElementById('coverBgCanvas');
+  var envelope = document.getElementById('envelope');
+  var seal     = document.getElementById('envelopeSeal');
+
+  if(!scene || !envelope) return;
+
+  var prefersReducedMotion = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var hasOpened = false;
+
+  /* goToPage() dan playCurrentSong() sudah didefinisikan di atas pada
+     file ini, jadi langsung dipakai tanpa didefinisikan ulang. */
+
+  var ctx = canvas.getContext('2d');
+  var W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var petals = [];
+  var sparkles = [];
+  var bokehs = [];
+  var burstStrength = 0;
+  var coverRafId = null;
+
+  var CV_PALETTE = ['#c98a94', '#e7b8bf', '#d9b48f', '#f3d2d8'];
+
+  function cvResize(){
+    var rect = scene.getBoundingClientRect();
+    W = rect.width;
+    H = rect.height;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function cvRand(min, max){ return min + Math.random() * (max - min); }
+
+  function makePetal(){
+    return {
+      x: cvRand(0, W),
+      y: cvRand(-H, H),
+      size: cvRand(4, 9),
+      speedY: cvRand(0.25, 0.6),
+      speedX: cvRand(-0.25, 0.25),
+      sway: cvRand(0, Math.PI * 2),
+      swaySpeed: cvRand(0.008, 0.02),
+      rotation: cvRand(0, Math.PI * 2),
+      rotSpeed: cvRand(-0.015, 0.015),
+      color: CV_PALETTE[Math.floor(Math.random() * CV_PALETTE.length)]
+    };
+  }
+
+  function makeSparkle(){
+    return {
+      x: cvRand(0, W),
+      y: cvRand(0, H),
+      r: cvRand(0.6, 1.8),
+      phase: cvRand(0, Math.PI * 2),
+      speed: cvRand(0.02, 0.05)
+    };
+  }
+
+  function makeBokeh(){
+    return {
+      x: cvRand(0, W),
+      y: cvRand(0, H),
+      r: cvRand(22, 48),
+      speedY: cvRand(0.06, 0.15),
+      opacity: cvRand(0.05, 0.12)
+    };
+  }
+
+  function seedParticles(){
+    var petalCount = W < 500 ? 10 : 18;
+    var sparkleCount = W < 500 ? 18 : 30;
+    var bokehCount = 6;
+    petals = [];
+    sparkles = [];
+    bokehs = [];
+    for(var i = 0; i < petalCount; i++) petals.push(makePetal());
+    for(var j = 0; j < sparkleCount; j++) sparkles.push(makeSparkle());
+    for(var k = 0; k < bokehCount; k++) bokehs.push(makeBokeh());
+  }
+
+  function drawPetalCv(p){
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rotation);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, p.size / 1.7, p.size, 0, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = 0.55 + burstStrength * 0.25;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawSparkleCv(s, t){
+    var twinkle = 0.4 + 0.6 * Math.sin(t * s.speed + s.phase);
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = '#fff6e8';
+    ctx.globalAlpha = Math.max(0, twinkle) * (0.5 + burstStrength * 0.5);
+    ctx.fill();
+  }
+
+  function drawBokehCv(b){
+    var grad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
+    grad.addColorStop(0, 'rgba(217,180,143,' + (b.opacity + burstStrength * 0.06) + ')');
+    grad.addColorStop(1, 'rgba(217,180,143,0)');
+    ctx.beginPath();
+    ctx.fillStyle = grad;
+    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function coverTick(t){
+    ctx.clearRect(0, 0, W, H);
+
+    bokehs.forEach(function(b){
+      b.y -= b.speedY;
+      if(b.y < -b.r) b.y = H + b.r;
+      drawBokehCv(b);
+    });
+
+    sparkles.forEach(function(s){ drawSparkleCv(s, t); });
+
+    var speedMul = 1 + burstStrength * 1.8;
+    petals.forEach(function(p){
+      p.sway += p.swaySpeed;
+      p.y += p.speedY * speedMul;
+      p.x += p.speedX * speedMul + Math.sin(p.sway) * 0.4;
+      p.rotation += p.rotSpeed;
+
+      if(p.y > H + 15){ p.y = -15; p.x = cvRand(0, W); }
+      if(p.x > W + 15) p.x = -15;
+      if(p.x < -15) p.x = W + 15;
+
+      drawPetalCv(p);
+    });
+
+    if(burstStrength > 0){
+      burstStrength = Math.max(0, burstStrength - 0.0025);
+    }
+
+    coverRafId = requestAnimationFrame(coverTick);
+  }
+
+  function startCoverAmbient(){
+    cvResize();
+    seedParticles();
+    if(!prefersReducedMotion){
+      coverRafId = requestAnimationFrame(coverTick);
+    } else {
+      coverTick(0);
+      cancelAnimationFrame(coverRafId);
+    }
+  }
+
+  window.addEventListener('resize', function(){
+    clearTimeout(window.__cvResizeTimer);
+    window.__cvResizeTimer = setTimeout(function(){
+      cvResize();
+      seedParticles();
+    }, 150);
+  });
+
+  function triggerPetalBurst(){
+    burstStrength = 1;
+    var extra = W < 500 ? 10 : 16;
+    for(var i = 0; i < extra; i++){
+      var p = makePetal();
+      p.y = cvRand(H * 0.3, H * 0.6);
+      p.speedY = cvRand(0.6, 1.3);
+      petals.push(p);
+    }
+  }
+
+  function openEnvelope(){
+    if(hasOpened) return;
+    hasOpened = true;
+
+    envelope.setAttribute('aria-disabled', 'true');
+    envelope.classList.add('envelope--opened');
+    envelope.tabIndex = -1;
+
+    // Getaran halus di perangkat yang mendukung (progressive enhancement, aman jika tidak ada)
+    if(navigator.vibrate){
+      try{ navigator.vibrate(12); }catch(e){ /* diabaikan */ }
+    }
+
+    // Musik dimulai segera dalam gesture klik/keydown (kebijakan autoplay browser).
+    // Dibungkus try/catch supaya kalau musik gagal (file belum ada, diblokir browser, dll)
+    // animasi amplop TETAP lanjut — visual tidak boleh bergantung pada audio.
+    try{
+      playCurrentSong();
+    }catch(e){
+      console.warn('[cover] playCurrentSong gagal, animasi tetap lanjut:', e);
+    }
+
+    var fastForward = prefersReducedMotion;
+    var t = fastForward ? {
+      sealOpen: 40, open: 60, rise: 90, blur: 100, glow: 110,
+      burst: 120, fadeStart: 260, fadeDone: 380
+    } : {
+      sealOpen: 150, open: 250, rise: 550, blur: 700, glow: 780,
+      burst: 850, fadeStart: 2150, fadeDone: 2950
+    };
+
+    seal.classList.add('envelope__seal--pressed');
+
+    setTimeout(function(){
+      seal.classList.remove('envelope__seal--pressed');
+      seal.classList.add('envelope__seal--opened');
+    }, t.sealOpen);
+
+    setTimeout(function(){
+      scene.classList.add('cover-scene--open');
+    }, t.open);
+
+    setTimeout(function(){
+      scene.classList.add('cover-scene--rising');
+    }, t.rise);
+
+    setTimeout(function(){
+      scene.classList.add('cover-scene--blur');
+    }, t.blur);
+
+    setTimeout(function(){
+      scene.classList.add('cover-scene--glow');
+    }, t.glow);
+
+    setTimeout(function(){
+      triggerPetalBurst();
+    }, t.burst);
+
+    setTimeout(function(){
+      scene.classList.add('cover-scene--fade-out');
+    }, t.fadeStart);
+
+    setTimeout(function(){
+      goToPage('1');
+      if(coverRafId) cancelAnimationFrame(coverRafId);
+    }, t.fadeDone);
+  }
+
+  envelope.addEventListener('click', openEnvelope);
+  envelope.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar'){
+      e.preventDefault();
+      openEnvelope();
+    }
+  });
+
+  startCoverAmbient();
 })();
 </script>
 
